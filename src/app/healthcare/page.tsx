@@ -118,7 +118,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message, isVisible, type, onClo
               <li>A copy of your application will be emailed within 60 seconds — please check your inbox.</li>
               <li>After reviewing your application, you will receive an invoice shortly.</li>
               <li>Please complete the payment and share proof of payment.</li>
-              <li>Your application will remain on hold until the payment is confirmed.</li>
+              <li>Your application will remain on hold until the payment is confirmed</li>
             </ul>
 
           </div>
