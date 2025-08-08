@@ -77,15 +77,15 @@
 
 /* === Registration Section === */
 .registration-section {
-  padding: 0 2rem 4rem;
-  max-width: 1200px;
+  padding: 0 1rem 4rem;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 3rem;
 }
 
@@ -93,7 +93,7 @@
   background: white;
   border: 1px solid var(--border-light);
   border-radius: var(--border-radius);
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
   display: flex;
@@ -203,14 +203,14 @@
 /* === Fees Section === */
 .fees-section {
   padding: 2rem 2rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
 .fee-categories {
   display: flex;
   flex-direction: column;
-    gap: 0.5rem;
+  gap: 2rem;
 }
 
 .fee-category-card {
@@ -225,7 +225,6 @@
 .fee-category-card:hover {
   box-shadow: var(--shadow-md);
 }
-
 .category-header {
   display: flex;
   justify-content: space-between;
@@ -250,7 +249,7 @@
 .toggle-button {
   background: var(--primary-blue);
   color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 3.5rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -258,6 +257,7 @@
   font-weight: 600;
   transition: var(--transition);
   white-space: nowrap;
+
 }
 
 .toggle-button:hover {
@@ -295,7 +295,7 @@
 .fee-row {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  padding: 1rem;
+  padding: 0.5rem 2rem;
   font-size: 0.9rem;
   border-bottom: 1px solid #f7fafc;
   align-items: center;
@@ -502,29 +502,6 @@
 
 .verification-table-wrapper {
   margin-bottom: 0.5rem;
-}
-
-.fee-table {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.fee-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-.fee-header {
-  background-color: #f5f5f5;
-  font-weight: bold;
-}
-
-.fee-total {
-  font-weight: bold;
-  color: #2d2d2d;
 }
 
 .h4 {

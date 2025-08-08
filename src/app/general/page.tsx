@@ -44,73 +44,146 @@ interface FormData {
   selectedFees: string[];
 }
 
+// Error Message Modal Component
+interface ErrorModalProps {
+  message: string;
+  type: 'success' | 'error';
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+const ErrorModal: React.FC<ErrorModalProps> = ({ message, isVisible, type, onClose }) => {
+  useEffect(() => {
+    if (isVisible) {
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+      // Focus management for accessibility
+      const modal = document.querySelector('.error-message-modal') as HTMLElement;
+      if (modal) modal.focus();
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isVisible]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isVisible) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={`error-message-overlay ${type}`}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="error-title"
+      aria-describedby="error-description"
+    >
+      <div
+        className="error-message-modal"
+        onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
+      >
+        <button
+          className="error-close-btn"
+          onClick={onClose}
+          aria-label="Close error message"
+          type="button"
+        >
+          ×
+        </button>
+
+        <div className="error-icon-container">
+          <div className="error-icon">{type === 'success' ? '✔' : '⚠'}</div>
+        </div>
+
+        {type === 'success' && (
+          <div id="success-message" className="success-message">
+            <h2>Form submitted successfully!</h2>
+            <ul className="success-points">
+              <li>A copy of your application will be emailed within 60 seconds — please check your inbox.</li>
+              <li>After reviewing your application, you will receive an invoice shortly.</li>
+              <li>Please complete the payment and share proof of payment.</li>
+              <li>Your application will remain on hold until the payment is confirmed.</li>
+            </ul>
+
+          </div>
+        )}
+
+
+
+        {type === 'error' && (
+          <h2 id="error-title" className="error-title">
+
+          </h2>
+        )}
+
+        <div id="error-description" className="error-message-text">
+          {message}
+        </div>
+
+        <button className="error-action-btn" onClick={onClose} type="button">
+          Got it, thanks!
+        </button>
+      </div>
+    </div>
+
+  );
+};
+
 const categories = [
   'Agricultural',
-  'Automotive & Spare Parts',
-  'Baby Products',
-  'Bakery Products',
-  'Beauty & Personal Care',
-  'Beverages',
-  'Books & Publications',
+  'Bakery Products', ' Beverages',
   'Building Materials',
-  'Canned Foods',
   'Chemicals',
   'Cigarettes',
   'Cleaning Products',
   'Computer Software',
-  'Confectionery',
-  'Dairy Alternatives',
-  'Dairy Products',
   'Detergents',
   'Eggs',
   'Electric Heaters',
-  'Electronics & Gadgets',
+  "Equipment's",
   'Food',
-  'Footwear',
-  'Frozen Foods',
   'Fruit Juices',
-  'Fruits and Vegetables Export',
-  'Furniture',
-  'Grains & Pulses',
-  'Health & Wellness Products',
-  'Home Appliances',
-  'Home Decor',
-  'Household Essentials',
-  'Industrial Goods',
-  'Jewelry & Accessories',
-  'Kitchenware & Utensils',
-  'Medical Devices',
-  'Mineral Water',
-  'Mobile Accessories',
-  'Office Supplies',
-  'Organic & Natural Products',
-  'Packaging Materials',
-  'Paper & Stationery',
-  'Perfume & Cosmetics',
-  'Pet Foods & Supplies',
-  'Pharmaceuticals / Medicines',
-  'Plastic Goods',
-  'Poultry & Meat',
-  'Rice',
+  'Confectionery',
   'Sea Foods',
   'Snack Foods',
+  'Dairy Products',
+  'Industrial Goods',
+  'Mineral water',
+  'Paper & Stationery',
+  'Perfume & Cosmetics',
   'Soaps',
-  'Spices & Condiments',
   'Sports Goods',
-  'Stationery & Office Equipment',
   'Tea',
   'Tissue Papers',
   'Toiletries',
-  'Tools & Hardware',
+  'Rice',
   'Toys',
-  'Water Filters & Accessories'
+  'Fruits and Vegetables Export',
 ];
-
 
 const GeneralForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [format, setFormat] = useState(''); // ✅ This was missing proper declaration
+  const [format, setFormat] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorType, setErrorType] = useState<'error' | 'success'>('error');
 
   const initialFormState: FormData = {
     formName: 'General Form',
@@ -166,6 +239,19 @@ const GeneralForm: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>(initialFormState);
   const [showErrors, setShowErrors] = useState(false);
+
+  // Function to show error modal
+  const showError = (msg: string, type: 'error' | 'success' = 'error') => {
+    setErrorMessage(msg);
+    setErrorType(type);
+    setShowErrorModal(true);
+  };
+
+  const hideError = () => {
+    setShowErrorModal(false);
+    setErrorMessage('');
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -292,10 +378,10 @@ const GeneralForm: React.FC = () => {
     }));
   };
 
-  // ✅ FIXED VALIDATION FUNCTION
   const validateStep = (): boolean => {
     switch (currentStep) {
       case 1:
+
         // Helper function to validate NTN format
         const isValidNTN = (value: string): boolean => {
           const ntnRegex = /^[A-Z0-9]{7}-[0-9]{1}$/;
@@ -316,7 +402,7 @@ const GeneralForm: React.FC = () => {
         // Helper function to validate website format
         const isValidWebsite = (value: string): boolean => {
           if (value === '') return true; // No website is valid
-          return value.startsWith('https://') && value.length > 8;
+          return value.startsWith('www.') && value.length > 8;
         };
 
         // Helper function to validate email format
@@ -325,7 +411,6 @@ const GeneralForm: React.FC = () => {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           return emailRegex.test(value);
         };
-
 
         // Check if format is selected and NTN/CNIC is properly filled
         let isNtnCnicValid: boolean = false;
@@ -351,7 +436,6 @@ const GeneralForm: React.FC = () => {
           !!format &&
           isNtnCnicValid &&
           isValidWebsite(formData.website)
-
         );
 
       case 2:
@@ -405,18 +489,17 @@ const GeneralForm: React.FC = () => {
     }
   };
 
-
   const nextStep = () => {
     const isValid = validateStep();
 
     if (isValid && currentStep < 7) {
-      setShowErrors(false); // Clear error state if valid
+      setShowErrors(false);
       setCurrentStep(currentStep + 1);
     } else {
-      setShowErrors(true); // Show inline errors
+      setShowErrors(true);
 
+      // Set the generic message first
       let errorMessage = 'Please fill all required fields correctly before proceeding.';
-
 
       if (currentStep === 1) {
         if (!format) {
@@ -430,13 +513,11 @@ const GeneralForm: React.FC = () => {
         } else if (!formData.email || !formData.email.includes('@') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
           errorMessage = 'Please enter a valid email address (e.g., example@company.com)';
         } else if (formData.website !== '' && formData.website.length <= 8) {
-          errorMessage = 'Please enter a complete website URL (e.g., https://www.example.com)';
+          errorMessage = 'Please enter a complete website URL (e.g.,www.example.com)';
         } else if (formData.glnRequired) {
-          // GLN validation - check if at least one address is filled
           const validAddresses = formData.glnAddresses.filter(addr =>
             addr !== '-' && addr.trim() !== ''
           );
-
           if (validAddresses.length === 0) {
             errorMessage = 'Please enter at least one GLN address or select "No" if GLN is not required.';
           }
@@ -446,7 +527,6 @@ const GeneralForm: React.FC = () => {
           const validAddresses = formData.glnAddresses.filter(addr =>
             addr !== '-' && addr.trim() !== ''
           );
-
           if (validAddresses.length === 0) {
             errorMessage = 'Please enter at least one GLN address.';
           }
@@ -458,7 +538,6 @@ const GeneralForm: React.FC = () => {
           errorMessage = 'Please enter GTIN8 information.';
         }
       } else if (currentStep === 7) {
-        // ✅ Step 7 specific validation messages
         if (!formData.userName) {
           errorMessage = 'Please enter your full name.';
         } else if (!formData.uploadedImage) {
@@ -468,9 +547,10 @@ const GeneralForm: React.FC = () => {
         }
       }
 
-      alert(errorMessage);
+      showError(errorMessage);
     }
   };
+
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -484,11 +564,10 @@ const GeneralForm: React.FC = () => {
     const isValid = validateStep();
 
     if (!isValid) {
-      setShowErrors(true); // ✅ Add this line to show error messages
+      setShowErrors(true);
 
       let errorMessage = 'Please fill all required fields correctly.';
 
-      // Step 7 specific validation messages
       if (!formData.userName) {
         errorMessage = 'Please enter your full name.';
       } else if (!formData.uploadedImage) {
@@ -497,8 +576,8 @@ const GeneralForm: React.FC = () => {
         errorMessage = 'Please agree to the terms and conditions.';
       }
 
-      alert(errorMessage);
-      return; // ✅ Add return to prevent form submission
+      showError(errorMessage);
+      return;
     }
 
     setIsSubmitting(true);
@@ -512,15 +591,16 @@ const GeneralForm: React.FC = () => {
     });
 
     // Instant UI reset
-    alert('Form submitted successfully!');
+    showError('Further details are in the email.', 'success');
     setFormData(initialFormState);
     setCurrentStep(1);
-    setShowErrors(false); // ✅ Reset error state
+    setShowErrors(false);
     setIsSubmitting(false);
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
+
       case 1:
         return (
           <div className="step-content">
@@ -539,9 +619,16 @@ const GeneralForm: React.FC = () => {
                   name="companyName"
                   placeholder="Note: Ensure company name matches NTN."
                   value={formData.companyName}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    let value = e.target.value;
+                    if (value.length > 0 && /^[a-zA-Z]/.test(value.charAt(0))) {
+                      value = value.charAt(0).toUpperCase() + value.slice(1);
+                    }
+                    setFormData({ ...formData, companyName: value });
+                  }}
                   required
                 />
+
               </div>
               <div className="form-group">
                 <label htmlFor="streetAddress">Street Address</label>
@@ -651,7 +738,7 @@ const GeneralForm: React.FC = () => {
                         setFormData({ ...formData, ntn: '' });
                       }}
                     />
-                    &nbsp; NTN - National Tax Number
+                    &nbsp; NTN
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center' }}>
                     <input
@@ -747,7 +834,7 @@ const GeneralForm: React.FC = () => {
                       onChange={() =>
                         setFormData((prev) => ({
                           ...prev,
-                          website: 'https://',
+                          website: 'www.',
                         }))
                       }
                     />
@@ -778,7 +865,7 @@ const GeneralForm: React.FC = () => {
                       name="website"
                       value={formData.website}
                       onChange={handleInputChange}
-                      placeholder="https://www.example.com"
+                      placeholder="www.example.com"
                       required
                     />
                   </div>
@@ -1175,10 +1262,15 @@ const GeneralForm: React.FC = () => {
                 </div>
               )}
             </div>
+            
+           
+
 
             <div className="gln-section">
               <div className="form-group">
                 <label>Do you require GTIN-8?</label>
+                <p className="note">GTIN-8 numbers encoded in EAN-8 barcode symbols are used on very small retail items (e.g., cigarettes, cosmetics, etc.) where there is insufficient space on the label or package to include an EAN-13 barcode.
+                </p>
                 <div className="radio-options">
                   <label>
                     <input
@@ -1366,7 +1458,6 @@ const GeneralForm: React.FC = () => {
               <p className='fee-description'>Training is mandatory and its cost is included in the amount mentioned above.</p>
               <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-13s, you will need to pay Rs. 68,807/- (Entrance + Annual Fees) for the first year and Rs. 20,238/- in subsequent years.</p>
               <p className='fee-description'>Note: A late fee charge of 5% will apply to the renewal invoice if payment is made after the due date.</p>
-              <p className='fee-description'>GTIN-8 numbers encoded in EAN-8 barcode symbols are used on very small retail items (e.g., cigarettes, cosmetics, etc.) where there is insufficient space on the label or package to include an EAN-13 barcode.</p>
               <p className='fee-description'>If you are a printer submitting products on behalf of a brand owner or manufacturer, the submission must be accompanied by a letter from that GS1 member accepting the charges.</p>
               <p className='fee-description'>Delivery of barcode test reports: Expected delivery time is 3–4 working days. The invoice will be issued to the company and the nominated contact person.</p>
             </div>
@@ -1385,7 +1476,6 @@ const GeneralForm: React.FC = () => {
                 <div className="term-item">
                   <strong>1. Grant of License:</strong> GS1 Pakistan grants You a non-exclusive nontransferable license to use the GS1 company prefix in connection with the supply and sale of your products.
                 </div>
-
                 <div className="term-item">
                   <strong>2. Term:</strong> The License and these terms and conditions come into effect for You on the date on which GS1 Pakistan notifies You of its acceptance of your GS1 Company Prefix License and GS1 Pakistan Membership and continues until terminated as provided in clause 9.
                 </div>
@@ -1508,7 +1598,6 @@ const GeneralForm: React.FC = () => {
             </div>
           </div>
         );
-
       default:
         return null;
     }
@@ -1518,11 +1607,11 @@ const GeneralForm: React.FC = () => {
     <div className="form-container">
       <div className="form-header">
         <div className="form-header-title">
-        <h1 className="form-header">
-  <span className="title-main">GS1 Pakistan </span>
-  <span className="title-sub">  General Application Form</span>
-</h1>
-</div>
+          <h1 className="form-header">
+            <span className="title-main">GS1 Pakistan </span>
+            <span className="title-sub">  General Application Form</span>
+          </h1>
+        </div>
         <div className="progress-bar">
           {[1, 2, 3, 4, 5, 6, 7].map((step) => (
             <div
@@ -1562,7 +1651,16 @@ const GeneralForm: React.FC = () => {
           )}
         </div>
       </form>
+
+      {/* Error Modal */}
+      <ErrorModal
+        message={errorMessage}
+        type={errorType}
+        isVisible={showErrorModal}
+        onClose={hideError}
+      />
     </div>
+
   );
 };
 

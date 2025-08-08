@@ -6,10 +6,9 @@ import './home.css';
 interface Category {
   name: string;
   key: string;
-  description: string;
-  path: string;
   entranceFees: FeeRow[];
   annualFees: FeeRow[];
+  verificationFees?: VerificationFeeSection[];
 }
 
 interface FeeRow {
@@ -19,15 +18,41 @@ interface FeeRow {
   total: number;
 }
 
+interface VerificationFeeSection {
+  title: string;
+  fees: VerificationFeeRow[];
+}
+
+interface VerificationFeeRow {
+  description: string;
+  perUnit: number;
+  pra: number;
+  total: number;
+}
+
 export default function HomePage() {
   const [visibleCategory, setVisibleCategory] = useState<string | null>(null);
+
+  // Separated paths object
+  const categoryPaths = {
+    general: '/general',
+    healthcare: '/healthcare',
+    udi: '/udi',
+    textile: '/textile'
+  };
+
+  // Separated descriptions object
+  const categoryDescriptions = {
+    general: 'For general products and services registration',
+    healthcare: 'For healthcare-related products and medical devices',
+    udi: 'For Unique Device Identification products',
+    textile: 'For textile products and garment industry'
+  };
 
   const categories: Category[] = [
     {
       name: 'General',
       key: 'general',
-      description: 'For general products and services registration',
-      path: '/general',
       entranceFees: [
         { label: 'For 1 GTIN-13s / GLN', fee: 20934, pra: 3349, total: 24284 },
         { label: 'For 10 GTIN-13s', fee: 20934, pra: 3349, total: 24284 },
@@ -45,46 +70,90 @@ export default function HomePage() {
     {
       name: 'Healthcare',
       key: 'healthcare',
-      description: 'For healthcare-related products and medical devices',
-      path: '/healthcare',
       entranceFees: [
-        { label: 'Healthcare 1 GTIN', fee: 25000, pra: 4000, total: 29000 },
-        { label: 'Healthcare 10 GTINs', fee: 40000, pra: 6400, total: 46400 },
+        { label: 'Healthcare for GLN 13s', fee: 33601, pra: 10752, total: 77953 },
+        { label: 'Healthcare for GTINs 14s ', fee: 67201, pra: 5376, total: 38977 },
       ],
-      annualFees: [
-        { label: 'Healthcare Annual 1 GTIN', fee: 10000, pra: 1600, total: 11600 },
-        { label: 'Healthcare Annual 10 GTINs', fee: 15000, pra: 2400, total: 17400 },
+      annualFees:[
+  { label: '1 GLN-13s', fee: 12037, pra: 1926, total: 13049 },
+        { label: '100 GTIN-14s', fee: 19260, pra: 3082, total: 22341 },
+        { label: '300 GTIN-14s', fee: 24075, pra: 3852, total: 27927 },
+        { label: '500 GTIN-14s', fee: 36113, pra: 5778, total: 41891 },
+        { label: '1,000 GTIN-14s', fee: 48151, pra: 7704, total: 55855 },
+      ],
+      verificationFees: [
+        {
+          title: 'Barcode Verification Fees: (1D)',
+          fees: [
+            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 907 },
+            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 652, pra: 104, total: 756 },
+          ]
+        },
+        {
+          title: 'Barcode Verification Fees: (2D) Data Matrix',
+          fees: [
+            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1435, pra: 230, total: 1665 },
+            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1304, pra: 209, total: 1513 },
+          ]
+        }
       ]
     },
     {
       name: 'UDI',
       key: 'udi',
-      description: 'For Unique Device Identification products',
-      path: '/udi',
       entranceFees: [
-        { label: 'UDI Base Fee', fee: 30000, pra: 4800, total: 34800 }
+ { label: 'UDI for GLN ', fee: 33601, pra: 10752, total: 77953 },
+        { label: 'UDI for GTINs 14s ', fee: 67201, pra: 5376, total: 38977 },
       ],
       annualFees: [
-        { label: 'UDI Annual Fee', fee: 12000, pra: 1920, total: 13920 }
+               { label: '1 GLN-13s', fee: 36111, pra: 5778, total: 41889 },
+        { label: '100 GTIN-14s', fee: 57778, pra: 9245, total: 67023 },
+        { label: '300 GTIN-14s', fee: 72223, pra: 11556, total: 83779 },
+        { label: '500 GTIN-14s', fee: 108339, pra: 17334, total: 125674 },
+        { label: '1,000 GTIN-14s', fee: 144451, pra: 23112, total: 167563 },
+      ],
+      verificationFees: [
+        {
+          title: 'Barcode Verification Fees: (1D)',
+          fees: [
+            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 782, pra: 125, total: 907 },
+            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 652, pra: 104, total: 756 },
+          ]
+        },
+        {
+          title: 'Barcode Verification Fees: (2D) Data Matrix',
+          fees: [
+            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1435, pra: 230, total: 1665 },
+            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1304, pra: 209, total: 1513 },
+          ]
+        }
       ]
     },
     {
       name: 'Textile',
       key: 'textile',
-      description: 'For textile products and garment industry',
-      path: '/textile',
       entranceFees: [
-        { label: 'Textile 1 GTIN', fee: 18000, pra: 2880, total: 20880 },
-        { label: 'Textile Bulk GTINs', fee: 36000, pra: 5760, total: 41760 },
+        { label: 'Textile GTINs-13s', fee: 41870, pra: 6699, total: 48569 },
+        { label: 'Textile  GLNs -13s', fee: 32600, pra: 5216, total: 37816 },
       ],
       annualFees: [
-        { label: 'Textile Annual 1 GTIN', fee: 8000, pra: 1280, total: 9280 },
-        { label: 'Textile Annual Bulk', fee: 16000, pra: 2560, total: 18560 },
+               { label: '1 GLN-13s', fee: 8723, pra: 1396, total: 10119 },
+        { label: '100 GTIN-13s', fee: 13957, pra: 2233, total: 16190 },
+        { label: '1,000 GTIN-13s', fee: 34891, pra: 5583, total: 181321 },        
+        { label: '10,000 GTIN-13s', fee: 156311, pra: 25010, total: 181321 },
+        { label: '100,000 GTIN-13s', fee: 358691, pra: 57391, total: 416763 },
+      ],
+      verificationFees: [
+        {
+          title: 'Barcode Verification Fees: (1D)',
+          fees: [
+            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
+            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+          ]
+        },
       ]
     }
-    
   ];
-
 
   const toggleCategory = (key: string) => {
     setVisibleCategory(prev => (prev === key ? null : key));
@@ -119,6 +188,28 @@ export default function HomePage() {
     </div>
   );
 
+  const renderVerificationFeeTable = (verificationSection: VerificationFeeSection) => (
+    <div className="fee-section" key={verificationSection.title}>
+      <h3 className="fee-title">{verificationSection.title}</h3>
+      <div className="fee-table">
+        <div className="fee-row fee-header">
+          <div>Description</div>
+          <div>Per Unit</div>
+          <div>PRA (16%)</div>
+          <div>Total Fee</div>
+        </div>
+        {verificationSection.fees.map((row, index) => (
+          <div key={index} className="fee-row">
+            <div>{row.description}</div>
+            <div>{formatCurrency(row.perUnit)}</div>
+            <div>{formatCurrency(row.pra)}</div>
+            <div className="fee-total">{formatCurrency(row.total)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <main className="home-container">
       {/* Hero Section */}
@@ -136,9 +227,9 @@ export default function HomePage() {
             <div key={category.key} className="registration-card">
               <div className="card-header">
                 <h3>{category.name} Registration</h3>
-                <p>{category.description}</p>
+                <p>{categoryDescriptions[category.key as keyof typeof categoryDescriptions]}</p>
               </div>
-              <Link href={category.path} className="card-link">
+              <Link href={categoryPaths[category.key as keyof typeof categoryPaths]} className="card-link">
                 <button className="primary-button">Start Registration</button>
               </Link>
             </div>
@@ -187,7 +278,7 @@ export default function HomePage() {
               <div className="category-header">
                 <div className="category-info">
                   <h3>{category.name} Category</h3>
-                  <p className="category-desc">{category.description}</p>
+                  <p className="category-desc">{categoryDescriptions[category.key as keyof typeof categoryDescriptions]}</p>
                 </div>
                 <button
                   className="toggle-button"
@@ -202,7 +293,13 @@ export default function HomePage() {
                 <div className="fee-details">
                   {renderFeeTable('Entrance Fees', category.entranceFees, true)}
                   {renderFeeTable('Annual Fees', category.annualFees)}
-                  {category.key === 'general'  && (
+                  
+                  {/* Render Verification Fees if they exist */}
+                  {category.verificationFees && category.verificationFees.map((verificationSection) => 
+                    renderVerificationFeeTable(verificationSection)
+                  )}
+                  
+                  {category.key === 'general' && (
                     <p className="fee-note">
                       * (Annual Fee Are Due from One Calendar Year of the Allocation Date)
                     </p>
@@ -213,138 +310,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-
-
-
-
-
-
-<section className="banking-section">
-<section className="verification-section">
-  <h2 className="section-title">Barcode Verification Charges</h2>
-<div className="verification-columns-wrapper">
-  {/* 1D Barcode Verification */}
-  <div className="verification-table-wrapper">
-    <h4 className="h4">Healthcare</h4>
-    <h3 className="fee-title">Barcode Verification Fees: (1D)</h3>
-    <div className="fee-table">
-      <div className="fee-row fee-header">
-        <div>Description</div>
-        <div>Qty</div>
-        <div>Per Unit</div>
-        <div>Punjab Revenue Authority (16%)</div>
-        <div>Total Fee</div>
-      </div>
-      <div className="fee-row">
-        <div>GTIN - 13’s</div>
-        <div>1-10 (Per GTINs)</div>
-        <div>PKR 750</div>
-        <div>PKR 120</div>
-        <div className="fee-total">PKR 870</div>
-      </div>
-      <div className="fee-row">
-        <div>GTIN - 13’s</div>
-        <div>Above 10 (Per GTINs)</div>
-        <div>PKR 700</div>
-        <div>PKR 112</div>
-        <div className="fee-total">PKR 812</div>
-      </div>
-    </div>
-  </div>
-
-  {/* 2D Data Matrix Verification */}
-  <div className="verification-table-wrapper">
-    <h3 className="fee-title">Barcode Verification Fees: (2D) Data Matrix</h3>
-    <div className="fee-table">
-      <div className="fee-row fee-header">
-        <div>Description</div>
-        <div>Qty</div>
-        <div>Per Unit</div>
-        <div>Punjab Revenue Authority (16%)</div>
-        <div>Total Fee</div>
-      </div>
-      <div className="fee-row">
-        <div>2D Data Matrix - 14’s</div>
-        <div>1-10 (Per GTINs)</div>
-        <div>PKR 1,196</div>
-        <div>PKR 191</div>
-        <div className="fee-total">PKR 1,387</div>
-      </div>
-      <div className="fee-row">
-        <div>2D Data Matrix - 14’s</div>
-        <div>Above 10 (Per GTINs)</div>
-        <div>PKR 1,087</div>
-        <div>PKR 174</div>
-        <div className="fee-total">PKR 1,261</div>
-      </div>
-    </div>
-  </div>
-  <div className="verification-table-wrapper">
-    <h4 className="h4">Healthcare</h4>
-    <h3 className="fee-title">Barcode Verification Fees: (1D)</h3>
-    <div className="fee-table">
-      <div className="fee-row fee-header">
-        <div>Description</div>
-        <div>Qty</div>
-        <div>Per Unit</div>
-        <div>Punjab Revenue Authority (16%)</div>
-        <div>Total Fee</div>
-      </div>
-      <div className="fee-row">
-        <div>GTIN - 13’s</div>
-        <div>1-10 (Per GTINs)</div>
-        <div>PKR 750</div>
-        <div>PKR 120</div>
-        <div className="fee-total">PKR 870</div>
-      </div>
-      <div className="fee-row">
-        <div>GTIN - 13’s</div>
-        <div>Above 10 (Per GTINs)</div>
-        <div>PKR 700</div>
-        <div>PKR 112</div>
-        <div className="fee-total">PKR 812</div>
-      </div>
-    </div>
-  </div>
-
-  {/* 2D Data Matrix Verification */}
-  <div className="verification-table-wrapper">
-    <h3 className="fee-title">Barcode Verification Fees: (2D) Data Matrix</h3>
-    <div className="fee-table">
-      <div className="fee-row fee-header">
-        <div>Description</div>
-        <div>Qty</div>
-        <div>Per Unit</div>
-        <div>Punjab Revenue Authority (16%)</div>
-        <div>Total Fee</div>
-      </div>
-      <div className="fee-row">
-        <div>2D Data Matrix - 14’s</div>
-        <div>1-10 (Per GTINs)</div>
-        <div>PKR 1,196</div>
-        <div>PKR 191</div>
-        <div className="fee-total">PKR 1,387</div>
-      </div>
-      <div className="fee-row">
-        <div>2D Data Matrix - 14’s</div>
-        <div>Above 10 (Per GTINs)</div>
-        <div>PKR 1,087</div>
-        <div>PKR 174</ div>
-        <div className="fee-total">PKR 1,261</div>
-      </div>
-    </div>
-  </div> 
-  </div>
-
-</section>
-</section>
-
-
-
-
-
-
 
       {/* Footer */}
       <footer className="footer">
