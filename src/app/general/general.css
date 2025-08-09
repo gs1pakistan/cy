@@ -207,7 +207,32 @@ body {
   border-radius: 12px;
   transition: all 0.4s var(--ease-smooth);
 }
+.progress-step.active .step-number {
+  background: linear-gradient(to right, #00b7ff, #0066ff); 
+  color: white;
+  border-color: var(#218838);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 174, 255, 0.4);
+}
 
+.progress-step.active .step-number::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.progress-step.current .step-number {
+  background: var(--accent-500);
+  color: white;
+  border-color: var(--accent-500);
+  transform: scale(1.15);
+  box-shadow: var(--shadow-xl), 0 0 30px rgba(249, 115, 22, 0.5);
+  animation: currentPulse 2s ease-in-out infinite;
+}
+.progress-step.active .step-label,
+.progress-step.current .step-label {
+  color: var(--primary-700);
+  font-weight: 700;
+  transform: translateY(-2px);
+}
 .step-number {
   width: 48px;
   height: 48px;
@@ -253,26 +278,7 @@ body {
   position: relative;
   padding-bottom: 10px;
 }
-.progress-step.active .step-number {
-  background: linear-gradient(to right, #00b7ff, #0066ff); 
-  color: white;
-  border-color: var(#218838);
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 174, 255, 0.4);
-}
 
-.progress-step.active .step-number::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.progress-step.current .step-number {
-  background: var(--accent-500);
-  color: white;
-  border-color: var(--accent-500);
-  transform: scale(1.15);
-  box-shadow: var(--shadow-xl), 0 0 30px rgba(249, 115, 22, 0.5);
-  animation: currentPulse 2s ease-in-out infinite;
-}
 
 @keyframes currentPulse {
   0%, 100% { 
@@ -293,12 +299,7 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.progress-step.active .step-label,
-.progress-step.current .step-label {
-  color: var(--primary-700);
-  font-weight: 700;
-  transform: translateY(-2px);
-}
+
 
 /* Premium Step Content */
 .step-content {
@@ -661,22 +662,7 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  .fee-structure {
-    padding: 20px 15px;
-    border-radius: 15px;
-  }
-  
-  .fee-structure h3 {
-    font-size: 1.3rem;
-  }
-  
-  .fee-table th,
-  .fee-table td {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-}
+
 
 /* Animation for loading */
 @keyframes fadeInUp {
@@ -964,19 +950,6 @@ body {
     padding: 12px 8px;
   }
 }
-
-@media (max-width: 480px) {
-  .fee-table input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .fee-table input[type="checkbox"]:checked::after {
-    width: 4px;
-    height: 9px;
-  }
-}
-
 /* Batch Selection Animation */
 .fee-table.batch-selecting tr {
   transition: all 0.2s ease;
@@ -1005,15 +978,6 @@ body {
 .fee-table th:first-child:hover {
   background: linear-gradient(135deg, rgba(30, 64, 175, 0.9), rgba(59, 130, 246, 0.9));
 }
-
-
-
-
-
-
-
-
-
 
 /* Premium Dropdown */
 .dropdown-container {
@@ -1574,58 +1538,7 @@ input[type="file"]:focus {
   }
 }
 
-@media (max-width: 480px) {
-  .form-container {
-    margin: 0.25rem;
-    padding: 1rem;
-    border-radius: 12px;
-  }
-  
-  .form-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-  }
-  
-  .progress-step {
-    padding: 0.25rem;
-  }
-  
-  .step-number {
-    width: 35px;
-    height: 35px;
-    font-size: 0.6875rem;
-  }
-  
-  .step-label {
-    font-size: 0.625rem;
-  }
-  
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 0.75rem;
-    font-size: 1rem; /* Prevent zoom on iOS */
-  }
-  
-  .fee-structure {
-    padding: 1.5rem 1rem;
-  }
-  
-  .fee-table th,
-  .fee-table td {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8125rem;
-  }
-  
-  .terms-conditions {
-    padding: 1rem;
-  }
-  
-  .term-item {
-    padding: 0.75rem;
-    font-size: 0.8125rem;
-  }
-}
+
 
 /* Premium Accessibility */
 button:focus-visible,
@@ -2228,4 +2141,207 @@ label[for="agreeTerms"]:hover {
 
 .form-header:hover::before {
   animation-duration: 1.5s;
+}
+
+@media (max-width: 480px) {
+  .form-group label {
+  font-weight: 600;
+  color:black;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.form-group input,
+.form-group select ,
+.form-group textarea {
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+  .form-header {
+  text-align: center;
+  margin-top: -2rem;
+  padding-bottom: -1rem;
+  position: relative;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+  .form-header h1 {
+    gap: 0.1rem;
+  }
+
+  .fee-structure {
+    padding: 1.5rem 1rem;
+    border-radius: 15px;
+  }
+
+  .fee-structure h3 {
+    font-size: 1.2rem;
+  }
+
+  .fee-table th,
+  .fee-table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .form-container {
+    margin: 0.1rem;
+    padding: 0.1rem;
+    border-radius: 12px;
+    max-width: 1100px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    box-shadow: var(--shadow-2xl), 
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: containerEntry 1s var(--ease-spring) both;
+  }
+
+  .form-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, var(--primary-100), transparent, var(--accent-100), transparent);
+    opacity: 0.03;
+    animation: meshRotate 60s linear infinite;
+    pointer-events: none;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 0.01rem;
+    padding-bottom: 0.01rem;
+  }
+
+  .progress-bar {
+  margin: 1rem 0;
+  position: relative;
+  padding: 0 -1rem;
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gray-200);
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 1px;
+  background: var(--gradient-primary);
+  border-radius: 1px;
+  z-index: 2;
+  transition: width 0.8s var(--ease-smooth);
+  width: calc((var(--current-step, 1) - 1) * 16.66%);
+}
+
+.progress-step {
+  z-index: 3;
+  padding: 0.1rem;
+  border-radius: 8px;
+  transition: all 0.4s var(--ease-smooth);
+}
+.progress-step.active .step-number {
+  background: linear-gradient(to right, #00b7ff, #0066ff); 
+  color: white;
+  border-color: var(#218838);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 174, 255, 0.4);
+}
+
+.progress-step.active .step-number::before {
+  transform: scale(0.8);
+}
+
+.progress-step.current .step-number {
+  background: var(--accent-500);
+  color: white;
+  border-color: var(--accent-500);
+  transform: scale(0.9);
+}
+
+
+  .step-number {
+    width: 30px;
+    height: 30px;
+    font-size: 0.6875rem;
+  }
+
+  .step-label {
+    font-size: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.75rem;
+    font-size: 0.8rem; /* Prevent zoom on iOS */
+  }
+
+  .title-main {
+    font-size: clamp(2rem, 1vw, 2rem);
+
+  }
+
+  .title-sub {
+    font-size: clamp(1.4rem, 4.5vw, 2rem);
+    background: linear-gradient(135deg, #ff6600 0%, #ff8800 25%, #fdba74 50%, #ff7300 75%, #ff6a00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 250% 100%;
+    animation: textGradient 3s ease-in-out infinite reverse;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .fee-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .fee-table input[type="checkbox"]:checked::after {
+    width: 4px;
+    height: 9px;
+  }
+  .step-content h2 {
+  font-size: 1.2rem;
+}
+}
+
+/* Animations */
+@keyframes containerEntry {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes meshRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
