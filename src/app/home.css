@@ -457,28 +457,79 @@
 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
   }
-  
+  .hero-subtitle {
+    font-size: 0.6rem;
+  } 
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.1rem;
   }
   
   .section-title {
-    font-size: 1.5rem;
+    
+    font-size: 1rem;
   }
-  
-  .registration-section,
-  .fees-section {
-    padding: 2.5rem 1rem;
+  .primary-button {
+  padding: 0.2rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  letter-spacing: 0.025em;
+}
+  .registration-section{
+    padding: 0.1rem 1rem;
+    margin-top: -3rem;
   }
-  
+    .fees-section {
+    padding: 0.1rem 1rem;
+    margin-top: 1rem;
+  }
+.info-row {
+  padding: 0.5rem 0;
+}
+
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-dark);
+  min-width: 130px;
+  font-size: 0.7rem;
+}
+
+.info-value {
+  font-weight: 700;
+  flex: 1;
+  font-size: 0.7rem;
+}
+  .registration-card {
+  padding: 1rem;
+}
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.card-header p {
+  color: var(--text-medium);
+  font-size: 0.7rem;
+}
+
   .banking-section {
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
   }
   
   .banking-card {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .category-header {
@@ -488,12 +539,72 @@
   .fee-details {
     padding: 1.5rem;
   }
-  
+  .banking-note {
+  margin-top: 0.1rem;
+  padding: 1rem;
+  background: #fef5e7;
+  border: 1px solid #f6ad55;
+  border-radius: 8px;
+  font-size: 0.6rem;
+}
   .card-grid {
     grid-template-columns: 1fr;
   }
+.toggle-button {
+  padding: 0.7rem 3rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
+.category-info h3 {
+  color: var(--primary-blue);
+  font-size: 1rem;
+  font-weight: 600;
+
+}
+
+.category-desc {
+  color: var(--text-medium);
+  font-size: 0.8rem;
+}
+
+.footer {
+  padding: 2rem 1rem 1rem;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.footer-main h4 {
+  color: var(--primary-orange);
+  font-size: 1.2rem;
+  margin-bottom: 0.1rem;
+}
+
+.footer-main p {
+  opacity: 0.8;
+  font-size: 0.8rem;
+}
+
+.footer-contact {
+
+  gap: 0.1rem;
+}
+
+.footer-contact p {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+
+}
 
 .verification-section {
   margin: 0.1rem auto;
