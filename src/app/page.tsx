@@ -321,7 +321,7 @@ export default function HomePage() {
           <div className="footer-contact">
             <p>Email: <a href="mailto:info@gs1pk.org">info@gs1pk.org</a></p>
             <p>Phone: <a href="tel:+924211111475">+92-42-111-111-475</a></p>
-            <p>Address: GS1 Pakistan, Lahore Chamber of Commerce & Industry Building, Lahore, Pakistan</p>
+            <p>Address: 2nd Floor, Azzainab Court, Campbell Street, 74200 Karachi Pakistan </p>
           </div>
         </div>
       </footer>
