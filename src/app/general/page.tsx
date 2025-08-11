@@ -1489,7 +1489,7 @@ const GeneralForm: React.FC = () => {
               <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-13s, you will need to pay Rs. 68,807/- (Entrance + Annual Fees) for the first year and Rs. 20,238/- in subsequent years.</p>
               <p className='fee-description'>Note: A late fee charge of 5% will apply to the renewal invoice if payment is made after the due date.</p>
               <p className='fee-description'>If you are a printer submitting products on behalf of a brand owner or manufacturer, the submission must be accompanied by a letter from that GS1 member accepting the charges.</p>
-              <p className='fee-description'>Delivery of barcode test reports: Expected delivery time is 3–4 working days. The invoice will be issued to the company and the nominated contact person.</p>
+              <p className='fee-description'>Barcode test reports will be provided within 3–4 working days. The invoice will be issued to the company and the designated contact person.</p>
             </div>
           </div>
         );
@@ -1695,3 +1695,4 @@ const GeneralForm: React.FC = () => {
 };
 
 export default GeneralForm;
+
