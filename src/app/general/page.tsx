@@ -337,9 +337,24 @@ const GeneralForm: React.FC = () => {
     }, 100);
   };
 
+  // UPDATE 1: Enhanced image upload with validation
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        showError('Please upload only image files (JPG, PNG, etc.)');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
+      // Check file size (1MB = 1024 * 1024 bytes)
+      if (file.size > 1024 * 1024) {
+        showError('File size must be less than 1MB. Please choose a smaller image.');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({
@@ -476,10 +491,13 @@ const GeneralForm: React.FC = () => {
         );
 
       case 6:
-        return (
-          formData.selectedCategories.length > 0 &&
-          (formData.GTIN8sRequired === 'no' || !!formData.GTIN8)
-        );
+        // UPDATE 2: Modified validation for step 6
+        const categoriesValid = formData.selectedCategories.length > 0;
+        const gtin8Valid = formData.GTIN8sRequired === 'no' || !!formData.GTIN8;
+        // If GTIN8sRequired is 'no', then selectedFees is required
+        const selectedFeesValid = formData.GTIN8sRequired === 'yes' || formData.selectedFees.length > 0;
+        
+        return categoriesValid && gtin8Valid && selectedFeesValid;
 
       case 7:
         return !!formData.userName && !!formData.uploadedImage && formData.agreeTerms;
@@ -498,12 +516,12 @@ const GeneralForm: React.FC = () => {
     } else {
       setShowErrors(true);
 
-      // Set the generic message first
+      // UPDATE 3: Set the generic message first
       let errorMessage = 'Please fill all required fields correctly before proceeding.';
 
       if (currentStep === 1) {
         if (!format) {
-          errorMessage = 'Please select whether you are entering NTN or CNIC.';
+          errorMessage = 'Please fill all required fields (*) correctly before proceeding.';
         } else if (format === 'NTN' && (!formData.ntn || formData.ntn.length !== 9)) {
           errorMessage = 'Please complete the NTN field in format: AB12345-6';
         } else if (format === 'CNIC' && (!formData.ntn || formData.ntn.length !== 15)) {
@@ -537,6 +555,15 @@ const GeneralForm: React.FC = () => {
         } else if (formData.GTIN8sRequired === 'yes' && !formData.GTIN8) {
           errorMessage = 'Please enter GTIN8 information.';
         }
+      } else if (currentStep === 6) {
+        // UPDATE 2: Enhanced validation for step 6
+        if (formData.selectedCategories.length === 0) {
+          errorMessage = 'Please select at least one product category.';
+        } else if (formData.GTIN8sRequired === 'yes' && !formData.GTIN8) {
+          errorMessage = 'Please enter GTIN8 information.';
+        } else if (formData.GTIN8sRequired === 'no' && formData.selectedFees.length === 0) {
+          errorMessage = 'Please select the required number of Global Trade Item Numbers (GTINs).';
+        }
       } else if (currentStep === 7) {
         if (!formData.userName) {
           errorMessage = 'Please enter your full name.';
@@ -550,7 +577,6 @@ const GeneralForm: React.FC = () => {
       showError(errorMessage);
     }
   };
-
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -612,7 +638,7 @@ const GeneralForm: React.FC = () => {
                 value={formData.formName}
               />
               <div className="form-group">
-                <label htmlFor="companyName">Company Name</label>
+                <label htmlFor="companyName">Company Name *</label>
                 <input
                   type="text"
                   id="companyName"
@@ -631,7 +657,7 @@ const GeneralForm: React.FC = () => {
 
               </div>
               <div className="form-group">
-                <label htmlFor="streetAddress">Street Address</label>
+                <label htmlFor="streetAddress">Street Address *</label>
                 <input
                   type="text"
                   id="streetAddress"
@@ -642,7 +668,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">City *</label>
                 <input
                   type="text"
                   id="city"
@@ -659,7 +685,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="province">State/Province</label>
+                <label htmlFor="province">State/Province *</label>
                 <select
                   id="province"
                   name="province"
@@ -675,7 +701,7 @@ const GeneralForm: React.FC = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="postCode">Postal Code</label>
+                <label htmlFor="postCode">Postal Code *</label>
                 <input
                   type="text"
                   id="postCode"
@@ -691,7 +717,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="telephone">Telephone (Including City Codes)</label>
+                <label htmlFor="telephone">Telephone (Including City Codes) *</label>
                 <input
                   type="tel"
                   id="telephone"
@@ -710,7 +736,7 @@ const GeneralForm: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="email">Company Email</label>
+                <label htmlFor="email">Company Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -720,12 +746,13 @@ const GeneralForm: React.FC = () => {
                   placeholder="example@company.com"
                   required
                 />
+                Please provide the official company email address.
               </div>
 
               <div className="form-group">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px', margin: '5px 0' }}>
                   <label htmlFor="ntn">
-                    Select whether you&apos;re entering
+                    Select whether you&apos;re entering*
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center' }}>
                     <input
@@ -797,10 +824,11 @@ const GeneralForm: React.FC = () => {
                     disabled={!format}
                     required
                   />
+                  NTN is mandatory; if unavailable, provide CNIC instead.
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="companyRegNo">SECP Company Registration Number</label>
+                <label htmlFor="companyRegNo">SECP Company Registration Number </label>
                 <input
                   type="text"
                   id="companyRegNo"
@@ -810,7 +838,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="noOfEmployees">Number of Employees</label>
+                <label htmlFor="noOfEmployees">Number of Employees *</label>
                 <input
                   type="number"
                   id="noOfEmployees"
@@ -1263,9 +1291,6 @@ const GeneralForm: React.FC = () => {
               )}
             </div>
             
-           
-
-
             <div className="gln-section">
               <div className="form-group">
                 <label>Do you require GTIN-8?</label>
@@ -1369,9 +1394,10 @@ const GeneralForm: React.FC = () => {
                       <td>
                         <input
                           type="checkbox"
-                          id="annual-1-gln" // match the sanitized ID
+                          id="annual-1-gln"
                           checked={formData.selectedFees.includes('1 GLN')}
                           onChange={() => handleFeeToggle('1 GLN')}
+                          disabled={formData.GTIN8sRequired === 'yes'}
                         />
 
                       </td>
@@ -1387,6 +1413,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-10-gtins"
                           checked={formData.selectedFees.includes('10 GTINs')}
                           onChange={() => handleFeeToggle('10 GTINs')}
+                          disabled={formData.GTIN8sRequired === 'yes'}
                         />
                       </td>
                       <td>10 GTIN-13s</td>
@@ -1401,6 +1428,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-100-gtins"
                           checked={formData.selectedFees.includes('100 GTINs')}
                           onChange={() => handleFeeToggle('100 GTINs')}
+                          disabled={formData.GTIN8sRequired === 'yes'}
                         />
                       </td>
                       <td>100 GTIN-13s</td>
@@ -1415,6 +1443,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-300-gtins"
                           checked={formData.selectedFees.includes('300 GTINs')}
                           onChange={() => handleFeeToggle('300 GTINs')}
+                          disabled={formData.GTIN8sRequired === 'yes'}
                         />
                       </td>
                       <td>300 GTIN-13s</td>
@@ -1443,6 +1472,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-1000-gtins"
                           checked={formData.selectedFees.includes('1000 GTINs')}
                           onChange={() => handleFeeToggle('1000 GTINs')}
+                          disabled={formData.GTIN8sRequired === 'yes'}
                         />
                       </td>
                       <td>1,000 GTIN-13s</td>
