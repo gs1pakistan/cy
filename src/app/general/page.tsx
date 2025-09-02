@@ -491,12 +491,12 @@ const GeneralForm: React.FC = () => {
         );
 
       case 6:
-        // UPDATE 2: Modified validation for step 6
         const categoriesValid = formData.selectedCategories.length > 0;
         const gtin8Valid = formData.GTIN8sRequired === 'no' || !!formData.GTIN8;
-        // If GTIN8sRequired is 'no', then selectedFees is required
+        // If GTIN8sRequired is 'yes', selectedFees is NOT required
+        // If GTIN8sRequired is 'no', selectedFees IS required
         const selectedFeesValid = formData.GTIN8sRequired === 'yes' || formData.selectedFees.length > 0;
-        
+
         return categoriesValid && gtin8Valid && selectedFeesValid;
 
       case 7:
@@ -556,7 +556,6 @@ const GeneralForm: React.FC = () => {
           errorMessage = 'Please enter GTIN8 information.';
         }
       } else if (currentStep === 6) {
-        // UPDATE 2: Enhanced validation for step 6
         if (formData.selectedCategories.length === 0) {
           errorMessage = 'Please select at least one product category.';
         } else if (formData.GTIN8sRequired === 'yes' && !formData.GTIN8) {
@@ -746,7 +745,8 @@ const GeneralForm: React.FC = () => {
                   placeholder="example@company.com"
                   required
                 />
-                Please provide the official company email address.
+                <p className='fee-description'>Please provide the official company email address.</p>
+
               </div>
 
               <div className="form-group">
@@ -824,7 +824,7 @@ const GeneralForm: React.FC = () => {
                     disabled={!format}
                     required
                   />
-                  NTN is mandatory; if unavailable, provide CNIC instead.
+                  <p className='fee-description'>  NTN is mandatory; if unavailable, provide CNIC instead.</p>
                 </div>
               </div>
               <div className="form-group">
@@ -1290,7 +1290,7 @@ const GeneralForm: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="gln-section">
               <div className="form-group">
                 <label>Do you require GTIN-8?</label>
@@ -1397,7 +1397,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-1-gln"
                           checked={formData.selectedFees.includes('1 GLN')}
                           onChange={() => handleFeeToggle('1 GLN')}
-                          disabled={formData.GTIN8sRequired === 'yes'}
+                       
                         />
 
                       </td>
@@ -1413,7 +1413,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-10-gtins"
                           checked={formData.selectedFees.includes('10 GTINs')}
                           onChange={() => handleFeeToggle('10 GTINs')}
-                          disabled={formData.GTIN8sRequired === 'yes'}
+                      
                         />
                       </td>
                       <td>10 GTIN-13s</td>
@@ -1428,7 +1428,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-100-gtins"
                           checked={formData.selectedFees.includes('100 GTINs')}
                           onChange={() => handleFeeToggle('100 GTINs')}
-                          disabled={formData.GTIN8sRequired === 'yes'}
+                    
                         />
                       </td>
                       <td>100 GTIN-13s</td>
@@ -1443,7 +1443,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-300-gtins"
                           checked={formData.selectedFees.includes('300 GTINs')}
                           onChange={() => handleFeeToggle('300 GTINs')}
-                          disabled={formData.GTIN8sRequired === 'yes'}
+                         
                         />
                       </td>
                       <td>300 GTIN-13s</td>
@@ -1472,7 +1472,7 @@ const GeneralForm: React.FC = () => {
                           id="annual-1000-gtins"
                           checked={formData.selectedFees.includes('1000 GTINs')}
                           onChange={() => handleFeeToggle('1000 GTINs')}
-                          disabled={formData.GTIN8sRequired === 'yes'}
+                      
                         />
                       </td>
                       <td>1,000 GTIN-13s</td>
@@ -1695,5 +1695,3 @@ const GeneralForm: React.FC = () => {
 };
 
 export default GeneralForm;
-
-
