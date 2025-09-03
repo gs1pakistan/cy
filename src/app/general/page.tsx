@@ -608,7 +608,7 @@ const GeneralForm: React.FC = () => {
     setIsSubmitting(true);
 
     // Background submission
-    fetch('https://script.google.com/macros/s/AKfycbzrOGtJf8FGhFOBI4Ld-QD-LdFOlmLBMHvSrYMGWoOmpdNrxrKTeWI7uZ-GCyqcNz1Mvw/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxRbkFya1O-6Ysk_dmKOmJgM4TKe1IuWA7Af-rRg_VLSF2wAFZ_4V9kMVkO3CBPMtAqdA/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
@@ -1695,3 +1695,4 @@ const GeneralForm: React.FC = () => {
 };
 
 export default GeneralForm;
+
