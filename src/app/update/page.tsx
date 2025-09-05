@@ -1296,11 +1296,11 @@ const GeneralForm: React.FC = () => {
                   <option value="Mr.">Mr.</option>
                   <option value="Mrs.">Mrs.</option>
                   <option value="Ms.">Ms.</option>
-                  <option value="Dr.">Dr.</option>
+                  <option value="Dr.">Dr</option>
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="ceo-firstName">First Name *</label>
+                <label htmlFor="ceo-firstName">First Name. *</label>
                 <input
                   type="text"
                   id="ceo-firstName"
