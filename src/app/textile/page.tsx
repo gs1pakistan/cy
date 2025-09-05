@@ -1942,7 +1942,7 @@ const GeneralForm: React.FC = () => {
         <div className="form-header-title">
           <h1 className="form-header">
             <span className="title-main">GS1 Pakistan </span>
-            <span className="title-sub">  UDI Application Form</span>
+            <span className="title-sub">  Textile Application Form</span>
           </h1>
         </div>
         <div className="progress-bar">
@@ -1996,5 +1996,6 @@ const GeneralForm: React.FC = () => {
 
   );
 };
+
 
 export default GeneralForm;
