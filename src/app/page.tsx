@@ -108,15 +108,15 @@ export default function HomePage() {
         {
           title: 'Barcode Verification Fees: (1D)',
           fees: [
-            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 782, pra: 125, total: 907 },
-            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 652, pra: 104, total: 756 },
+            { description: 'GTIN - 13\s (1-10 Per GTINs)', perUnit: 782, pra: 125, total: 907 },
+            { description: 'GTIN - 13\s (Above 10 Per GTINs)', perUnit: 652, pra: 104, total: 756 },
           ]
         },
         {
           title: 'Barcode Verification Fees: (2D) Data Matrix',
           fees: [
-            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1435, pra: 230, total: 1665 },
-            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1304, pra: 209, total: 1513 },
+            { description: '2D Data Matrix - 14\s (1-10 Per GTINs)', perUnit: 1435, pra: 230, total: 1665 },
+            { description: '2D Data Matrix - 14\s (Above 10 Per GTINs)', perUnit: 1304, pra: 209, total: 1513 },
           ]
         }
       ]
@@ -139,15 +139,15 @@ export default function HomePage() {
         {
           title: 'Barcode Verification Fees: (1D)',
           fees: [
-            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 907 },
-            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+            { description: 'GTIN - 13\s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 907 },
+            { description: 'GTIN - 13\s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
           ]
         },
         {
           title: 'Barcode Verification Fees: (2D) Data Matrix',
           fees: [
-            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1196, pra: 191, total: 1387 },
-            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1087, pra: 174, total: 1261 },
+            { description: '2D Data Matrix - 14\s (1-10 Per GTINs)', perUnit: 1196, pra: 191, total: 1387 },
+            { description: '2D Data Matrix - 14\s (Above 10 Per GTINs)', perUnit: 1087, pra: 174, total: 1261 },
           ]
         }
       ]
@@ -170,8 +170,8 @@ export default function HomePage() {
         {
           title: 'Barcode Verification Fees: (1D)',
           fees: [
-            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
-            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+            { description: 'GTIN - 13\s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
+            { description: 'GTIN - 13\s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
           ]
         },
       ]
@@ -194,8 +194,8 @@ export default function HomePage() {
         {
           title: 'Barcode Verification Fees: (1D)',
           fees: [
-            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
-            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+            { description: 'GTIN - 13\s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
+            { description: 'GTIN - 13\s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
           ]
         },
       ]
@@ -376,7 +376,7 @@ export default function HomePage() {
                   {renderFeeTable('Entrance Fees', category.entranceFees, true)}
                   {renderFeeTable(
                     category.key === 'udi' 
-                      ? 'Consolidated Fee Schedule for GTIN-14\'s renewable every three years (Inclusive of Govt. Taxes)' 
+                      ? 'Consolidated Fee Schedule for GTIN-14\s renewable every three years (Inclusive of Govt. Taxes)' 
                       : 'Annual Fees', 
                     category.annualFees
                   )}
@@ -393,7 +393,7 @@ export default function HomePage() {
                   )}
                   {category.key === 'udi' && (
                     <p className="fee-note">
-                      * (Consolidated Fee Schedule for GTIN-14's renewable every three years (Inclusive of Govt. Taxes))
+                      * (Consolidated Fee Schedule for GTIN-14s renewable every three years Inclusive of Govt. Taxes)
                     </p>
                   )}
                 </div>

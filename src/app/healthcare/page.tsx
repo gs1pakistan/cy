@@ -1672,13 +1672,13 @@ const GeneralForm: React.FC = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td> For GTIN - 14's  </td>
+                      <td> For GTIN - 14s  </td>
                       <td>PKR  67,201</td>
                       <td>PKR 10,752</td>
                       <td>PKR 77,953</td>
                     </tr>
                     <tr>
-                      <td>For GLN - 13's </td>
+                      <td>For GLN - 13s </td>
                       <td> PKR  33,601</td>
                       <td> PKR 5,376</td>
                       <td> PKR 38,977</td>
