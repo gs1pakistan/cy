@@ -1,8 +1,9 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import './general.css';
+import './healthcare.css';
 
 interface ContactInfo {
   designation: string;
@@ -115,20 +116,17 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message, isVisible, type, onClo
           <div id="success-message" className="success-message">
             <h2>Form submitted successfully!</h2>
             <ul className="success-points">
-              <li>A copy of your application will be emailed within 60 seconds — please check your inbox.</li>
-              <li>After reviewing your application, you will receive an invoice shortly.</li>
-              <li>Please complete the payment and share proof of payment.</li>
-              <li>Your application will remain on hold until the payment is confirmed.</li>
+              <li>➔A copy of your application will be emailed within minute— please check your inbox.</li>
+              <li>➔After reviewing your application, you will receive an invoice shortly.</li>
+              <li>➔Please complete the payment and share proof of payment with us.</li>
+              <li>➔Your application will remain on hold until the payment is confirmed.</li>
             </ul>
-
           </div>
         )}
 
-
-
         {type === 'error' && (
           <h2 id="error-title" className="error-title">
-
+            Alert
           </h2>
         )}
 
@@ -141,7 +139,6 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message, isVisible, type, onClo
         </button>
       </div>
     </div>
-
   );
 };
 
@@ -175,6 +172,7 @@ const categories = [
   'Rice',
   'Toys',
   'Fruits and Vegetables Export',
+  'Other',
 ];
 
 const GeneralForm: React.FC = () => {
@@ -184,6 +182,7 @@ const GeneralForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorType, setErrorType] = useState<'error' | 'success'>('error');
+  const [customCategory, setCustomCategory] = useState('');
 
   const initialFormState: FormData = {
     formName: 'Healthcare Form',
@@ -278,15 +277,6 @@ const GeneralForm: React.FC = () => {
     }));
   };
 
-  const handleCategoryChange = (category: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      selectedCategories: prev.selectedCategories.includes(category)
-        ? prev.selectedCategories.filter((c) => c !== category)
-        : [...prev.selectedCategories, category],
-    }));
-  };
-
   // Dropdown states
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -337,9 +327,24 @@ const GeneralForm: React.FC = () => {
     }, 100);
   };
 
+  // Enhanced image upload with validation
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        showError('Please upload only image files (JPG, PNG, etc.)');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
+      // Check file size (1MB = 1024 * 1024 bytes)
+      if (file.size > 1024 * 1024) {
+        showError('File size must be less than 1MB. Please choose a smaller image.');
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({
@@ -378,179 +383,442 @@ const GeneralForm: React.FC = () => {
     }));
   };
 
-  const validateStep = (): boolean => {
-    switch (currentStep) {
-      case 1:
 
-        // Helper function to validate NTN format
-        const isValidNTN = (value: string): boolean => {
-          const ntnRegex = /^[A-Z0-9]{7}-[0-9]{1}$/;
-          return value.length === 9 && ntnRegex.test(value);
-        };
 
-        // Helper function to validate CNIC format
-        const isValidCNIC = (value: string): boolean => {
-          const cnicRegex = /^[0-9]{5}-[0-9]{7}-[0-9]{1}$/;
-          return value.length === 15 && cnicRegex.test(value);
-        };
 
-        // Helper function to validate telephone format
-        const isValidTelephone = (value: string): boolean => {
-          return value.startsWith('92') && value.length >= 7;
-        };
 
-        // Helper function to validate website format
-        const isValidWebsite = (value: string): boolean => {
-          if (value === '') return true; // No website is valid
-          return value.startsWith('www.') && value.length > 8;
-        };
 
-        // Helper function to validate email format
-        const isValidEmail = (value: string): boolean => {
-          // Must contain @ symbol and have text before and after it
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return emailRegex.test(value);
-        };
 
-        // Check if format is selected and NTN/CNIC is properly filled
-        let isNtnCnicValid: boolean = false;
 
-        if (format === 'NTN') {
-          isNtnCnicValid = !!(formData.ntn && isValidNTN(formData.ntn));
-        } else if (format === 'CNIC') {
-          isNtnCnicValid = !!(formData.ntn && isValidCNIC(formData.ntn));
-        }
 
-        return (
-          !!formData.formName &&
-          !!formData.companyName &&
-          !!formData.streetAddress &&
-          !!formData.city &&
-          !!formData.province &&
-          !!formData.postCode &&
-          !!formData.telephone &&
-          isValidTelephone(formData.telephone) &&
-          !!formData.email &&
-          isValidEmail(formData.email) &&
-          !!formData.noOfEmployees &&
-          !!format &&
-          isNtnCnicValid &&
-          isValidWebsite(formData.website)
+
+
+
+
+
+
+
+  // Category handling functions
+  const handleCategoryChange = (category: string) => {
+    if (category === 'Other') {
+      // Toggle the placeholder category
+      if (formData.selectedCategories.includes(category)) {
+        // Remove placeholder and clear custom input
+        const updatedCategories = formData.selectedCategories.filter(
+          (cat) => cat !== category && categories.includes(cat)
         );
-
-      case 2:
-        return (
-          formData.glnRequired || formData.glnAddresses.every((addr) => !!addr) &&
-          !!formData.GTINsRequired &&
-          (formData.GTIN8sRequired === 'no' || !!formData.GTIN8)
-        );
-
-      case 3:
-        return (
-          !!formData.ceo.designation &&
-          !!formData.ceo.title &&
-          !!formData.ceo.firstName &&
-          !!formData.ceo.lastName &&
-          !!formData.ceo.email &&
-          !!formData.ceo.telephone
-        );
-
-      case 4:
-        return (
-          !!formData.keyContact.designation &&
-          !!formData.keyContact.title &&
-          !!formData.keyContact.firstName &&
-          !!formData.keyContact.lastName &&
-          !!formData.keyContact.email &&
-          !!formData.keyContact.telephone
-        );
-
-      case 5:
-        return (
-          !!formData.accountsContact.designation &&
-          !!formData.accountsContact.title &&
-          !!formData.accountsContact.firstName &&
-          !!formData.accountsContact.lastName &&
-          !!formData.accountsContact.email &&
-          !!formData.accountsContact.telephone
-        );
-
-      case 6:
-        return (
-          formData.selectedCategories.length > 0 &&
-          (formData.GTIN8sRequired === 'no' || !!formData.GTIN8)
-        );
-
-      case 7:
-        return !!formData.userName && !!formData.uploadedImage && formData.agreeTerms;
-
-      default:
-        return true;
+        setFormData((prev) => ({
+          ...prev,
+          selectedCategories: updatedCategories,
+        }));
+        setCustomCategory(''); // Clear custom input
+      } else {
+        // Add placeholder
+        setFormData((prev) => ({
+          ...prev,
+          selectedCategories: [...prev.selectedCategories, category],
+        }));
+      }
+    } else {
+      // Handle regular categories
+      setFormData((prev) => ({
+        ...prev,
+        selectedCategories: prev.selectedCategories.includes(category)
+          ? prev.selectedCategories.filter((c) => c !== category)
+          : [...prev.selectedCategories, category],
+      }));
     }
   };
 
-  const nextStep = () => {
-    const isValid = validateStep();
+  // Handle custom category input
+  const handleCustomCategoryChange = (value: string) => {
+    setCustomCategory(value);
 
-    if (isValid && currentStep < 7) {
+    // Only process if "Other" is selected
+    if (!formData.selectedCategories.includes('Other')) {
+      return;
+    }
+
+    // Keep only predefined categories (remove old custom ones)
+    const predefinedCategories = formData.selectedCategories.filter((cat) =>
+      categories.includes(cat)
+    );
+
+    if (value.trim()) {
+      // Always replace any previous custom category instead of adding a new one
+      setFormData((prev) => ({
+        ...prev,
+        selectedCategories: [...predefinedCategories, value.trim()],
+      }));
+    } else {
+      // If custom input is empty, restore placeholder
+      setFormData((prev) => ({
+        ...prev,
+        selectedCategories: [...predefinedCategories, ''],
+      }));
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Updated validateStep function with detailed error checking
+  const validateStep = (): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+
+    // Helper functions
+    const isValidNTN = (value: string): boolean => {
+      const ntnRegex = /^[A-Z0-9]{7}-[0-9]{1}$/;
+      return value.length === 9 && ntnRegex.test(value);
+    };
+
+    const isValidCNIC = (value: string): boolean => {
+      const cnicRegex = /^[0-9]{5}-[0-9]{7}-[0-9]{1}$/;
+      return value.length === 15 && cnicRegex.test(value);
+    };
+
+    const isValidTelephone = (value: string): boolean => {
+      return value.startsWith('92') && value.length >= 10;
+    };
+    const isValidCeoTelephone = (value: string): boolean => {
+      return value.startsWith('92') && value.length >= 10;
+    };
+    const isValidKeyContactTelephone = (value: string): boolean => {
+      return value.startsWith('92') && value.length >= 10;
+    };
+
+    const isValidAccountsTelephone = (value: string): boolean => {
+      return value.startsWith('92') && value.length >= 10;
+    };
+    const isValidWebsite = (value: string): boolean => {
+      if (value === '') return true;
+      return value.startsWith('www.') && value.length > 6;
+    };
+
+    const isValidEmail = (value: string): boolean => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(value);
+    };
+
+    switch (currentStep) {
+      case 1:
+        // Company Name validation
+        if (!formData.companyName?.trim()) {
+          errors.push("Company Name is required");
+        }
+
+        // Street Address validation
+        if (!formData.streetAddress?.trim()) {
+          errors.push("Street Address is required");
+        }
+
+        // City validation
+        if (!formData.city?.trim()) {
+          errors.push("City is required");
+        } else if (!/^[a-zA-Z\s]+$/.test(formData.city)) {
+          errors.push("City should contain only letters and spaces");
+        }
+
+        // Province validation
+        if (!formData.province) {
+          errors.push("Province selection is required");
+        }
+
+        // Post Code validation
+        if (!formData.postCode?.trim()) {
+          errors.push("Postal Code is required");
+        } else if (!/^\d+$/.test(formData.postCode)) {
+          errors.push("Postal Code should contain only numbers");
+        }
+
+        // Telephone validation
+        if (!formData.telephone?.trim()) {
+          errors.push("Telephone number is required");
+        } else if (!isValidTelephone(formData.telephone)) {
+          if (!formData.telephone.startsWith('92')) {
+            errors.push("Telephone number must start with country code '92'");
+          } else if (formData.telephone.length < 12) {
+            errors.push("please complete the Mobile or Telephone Number after country code '92'");
+          } else {
+            errors.push("Invalid telephone number format (e.g., 923001234567)");
+          }
+        }
+
+        // Email validation
+        if (!formData.email?.trim()) {
+          errors.push("Company Email is required");
+        } else if (!isValidEmail(formData.email)) {
+          errors.push("Please enter a valid email address (e.g., example@company.com)");
+        }
+
+        // Format selection validation
+        if (!format) {
+          errors.push("Please select whether you're entering NTN or CNIC");
+        } else {
+          // NTN/CNIC validation
+          if (!formData.ntn?.trim()) {
+            errors.push(`${format} field is required`);
+          } else {
+            if (format === 'NTN' && !isValidNTN(formData.ntn)) {
+              if (formData.ntn.length !== 9) {
+                errors.push("NTN must be exactly 9 characters (e.g., AB12345-6)");
+              } else {
+                errors.push("NTN format is invalid. Use format: AB12345-6");
+              }
+            } else if (format === 'CNIC' && !isValidCNIC(formData.ntn)) {
+              if (formData.ntn.length !== 15) {
+                errors.push("CNIC must be exactly 15 characters (e.g., 12345-1234567-1)");
+              } else {
+                errors.push("CNIC format is invalid. Use format: 12345-1234567-1");
+              }
+            }
+          }
+        }
+
+        // Number of Employees validation
+        if (!formData.noOfEmployees?.trim()) {
+          errors.push("Number of Employees is required");
+        } else if (parseInt(formData.noOfEmployees) <= 0) {
+          errors.push("Number of Employees must be greater than 0");
+        }
+
+        // Website validation (only if provided)
+        if (formData.website !== '' && !isValidWebsite(formData.website)) {
+          if (!formData.website.startsWith('www.')) {
+            errors.push("Website URL must start with 'www.' (e.g., www.example.com)");
+          } else if (formData.website.length <= 8) {
+            errors.push("Please enter a complete website URL (e.g., www.example.com)");
+          }
+        }
+        break;
+
+      case 2:
+        // GLN validation
+        if (formData.glnRequired) {
+          const validAddresses = formData.glnAddresses.filter(addr =>
+            addr && addr !== '-' && addr.trim() !== ''
+          );
+          if (validAddresses.length === 0) {
+            errors.push("At least one GLN address is required when GLN is selected as 'Yes'");
+          } else {
+            // Check each GLN address
+            formData.glnAddresses.forEach((addr, index) => {
+              if (addr && addr !== '-' && addr.trim().length < 10) {
+                errors.push(`GLN address ${index + 1} must be at least 10 characters long`);
+              }
+            });
+          }
+        }
+
+        // Billing address validation
+        if (formData.billingRequired === 'Yes') {
+          if (!formData.billingAddresses[0] || formData.billingAddresses[0] === '-' || formData.billingAddresses[0].trim() === '') {
+            errors.push("Billing address is required when separate billing is selected as 'Yes'");
+          } else if (formData.billingAddresses[0].trim().length < 10) {
+            errors.push("Billing address must be at least 10 characters long");
+          }
+        }
+        break;
+
+       case 3:
+        // CEO Contact validation
+        const ceoValidation = [
+          { field: 'designation', label: 'CEO Designation', value: formData.ceo.designation },
+          { field: 'title', label: 'CEO Title', value: formData.ceo.title },
+          { field: 'firstName', label: 'CEO First Name', value: formData.ceo.firstName },
+          { field: 'lastName', label: 'CEO Last Name', value: formData.ceo.lastName },
+          { field: 'email', label: 'CEO Email', value: formData.ceo.email },
+          { field: 'telephone', label: 'CEO Telephone', value: formData.ceo.telephone }
+        ];
+
+        ceoValidation.forEach(({ field, label, value }) => {
+          if (!value?.trim()) {
+            errors.push(`${label} is required`);
+          } else if (field === 'email' && !isValidEmail(value)) {
+            errors.push(`${label} must be a valid email address`);
+          } else if (field === 'firstName' || field === 'lastName') {
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+              errors.push(`${label} should contain only letters and spaces`);
+            }
+          } else if (field === 'telephone' && !isValidCeoTelephone(value)) {
+            if (!value.startsWith('92')) {
+              errors.push(`${label} must start with country code '92'`);
+            } else if (value.length < 10) {
+              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+            } else {
+              errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
+            }
+          }
+        });
+        break;
+
+      case 4:
+        // Key Contact validation
+        const keyContactValidation = [
+          { field: 'designation', label: 'Key Contact Designation', value: formData.keyContact.designation },
+          { field: 'title', label: 'Key Contact Title', value: formData.keyContact.title },
+          { field: 'firstName', label: 'Key Contact First Name', value: formData.keyContact.firstName },
+          { field: 'lastName', label: 'Key Contact Last Name', value: formData.keyContact.lastName },
+          { field: 'email', label: 'Key Contact Email', value: formData.keyContact.email },
+          { field: 'telephone', label: 'Key Contact Telephone', value: formData.keyContact.telephone }
+        ];
+
+        keyContactValidation.forEach(({ field, label, value }) => {
+          if (!value?.trim()) {
+            errors.push(`${label} is required`);
+          } else if (field === 'email' && !isValidEmail(value)) {
+            errors.push(`${label} must be a valid email address`);
+          } else if (field === 'firstName' || field === 'lastName') {
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+              errors.push(`${label} should contain only letters and spaces`);
+            }
+          } else if (field === 'telephone' && !isValidKeyContactTelephone(value)) {
+            if (!value.startsWith('92')) {
+              errors.push(`${label} must start with country code '92'`);
+            } else if (value.length < 10) {
+              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+            } else {
+              errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
+            }
+          }
+        });
+        break;
+
+      case 5:
+        // Accounts Contact validation
+        const accountsValidation = [
+          { field: 'designation', label: 'Accounts Contact Designation', value: formData.accountsContact.designation },
+          { field: 'title', label: 'Accounts Contact Title', value: formData.accountsContact.title },
+          { field: 'firstName', label: 'Accounts Contact First Name', value: formData.accountsContact.firstName },
+          { field: 'lastName', label: 'Accounts Contact Last Name', value: formData.accountsContact.lastName },
+          { field: 'email', label: 'Accounts Contact Email', value: formData.accountsContact.email },
+          { field: 'telephone', label: 'Accounts Contact Telephone', value: formData.accountsContact.telephone }
+        ];
+
+       accountsValidation.forEach(({ field, label, value }) => {
+          if (!value?.trim()) {
+            errors.push(`${label} is required`);
+          } else if (field === 'email' && !isValidEmail(value)) {
+            errors.push(`${label} must be a valid email address`);
+          } else if (field === 'firstName' || field === 'lastName') {
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+              errors.push(`${label} should contain only letters and spaces`);
+            }
+          } else if (field === 'telephone' && !isValidAccountsTelephone(value)) {
+            if (!value.startsWith('92')) {
+              errors.push(`${label} must start with country code '92'`);
+            } else if (value.length < 10) {
+              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+            } else {
+              errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
+            }
+          }
+        });
+        break;
+
+      case 6:
+        // Product categories validation
+        if (formData.selectedCategories.length === 0) {
+          errors.push("At least one product category must be selected");
+        }
+
+        // Custom category validation
+        if (formData.selectedCategories.includes('Other') && !customCategory.trim()) {
+          errors.push("Please specify your custom category when 'Other' is selected");
+        }
+
+        // GTIN-8 validation
+        if (formData.GTIN8sRequired === 'yes') {
+          if (!formData.GTIN8?.trim()) {
+            errors.push("Number of GTIN-8s is required when GTIN-8 is selected as 'Yes'");
+          } else {
+            const gtin8Number = parseInt(formData.GTIN8);
+            if (isNaN(gtin8Number) || gtin8Number < 10) {
+              errors.push("Minimum 10 GTIN-8s are required");
+            }
+          }
+        } else if (formData.GTIN8sRequired === 'no') {
+          // For GTIN-13s, at least one fee option must be selected
+          if (formData.selectedFees.length === 0) {
+            errors.push("Please select the required number of GTIN from the fee structure table");
+          }
+        } else {
+          errors.push("Please select whether you require GTIN-8");
+        }
+        break;
+
+      case 7:
+        // User name validation
+        if (!formData.userName?.trim()) {
+          errors.push("Authorized Person Full Name is required");
+        } else if (formData.userName.trim().length < 3) {
+          errors.push("Full name must be at least 3 characters long");
+        } else if (!/^[a-zA-Z\s]+$/.test(formData.userName)) {
+          errors.push("Full name should contain only letters and spaces");
+        }
+
+        // Image upload validation
+        if (!formData.uploadedImage) {
+          errors.push("Signature upload is required");
+        }
+
+        // Terms agreement validation
+        if (!formData.agreeTerms) {
+          errors.push("You must agree to the Terms and Conditions to proceed");
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  };
+
+  // Updated nextStep function
+  const nextStep = () => {
+    const validation = validateStep();
+
+    if (validation.isValid && currentStep < 7) {
       setShowErrors(false);
       setCurrentStep(currentStep + 1);
     } else {
       setShowErrors(true);
 
-      // Set the generic message first
-      let errorMessage = 'Please fill all required fields correctly before proceeding.';
+      // Create detailed error message
+      let errorMessage = '';
 
-      if (currentStep === 1) {
-        if (!format) {
-          errorMessage = 'Please select whether you are entering NTN or CNIC.';
-        } else if (format === 'NTN' && (!formData.ntn || formData.ntn.length !== 9)) {
-          errorMessage = 'Please complete the NTN field in format: AB12345-6';
-        } else if (format === 'CNIC' && (!formData.ntn || formData.ntn.length !== 15)) {
-          errorMessage = 'Please complete the CNIC field in format: 12345-1234567-1';
-        } else if (!formData.telephone || formData.telephone.length < 7) {
-          errorMessage = 'Please enter a valid telephone number (e.g., 923001234567)';
-        } else if (!formData.email || !formData.email.includes('@') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-          errorMessage = 'Please enter a valid email address (e.g., example@company.com)';
-        } else if (formData.website !== '' && formData.website.length <= 8) {
-          errorMessage = 'Please enter a complete website URL (e.g.,www.example.com)';
-        } else if (formData.glnRequired) {
-          const validAddresses = formData.glnAddresses.filter(addr =>
-            addr !== '-' && addr.trim() !== ''
-          );
-          if (validAddresses.length === 0) {
-            errorMessage = 'Please enter at least one GLN address or select "No" if GLN is not required.';
-          }
-        }
-      } else if (currentStep === 2) {
-        if (formData.glnRequired) {
-          const validAddresses = formData.glnAddresses.filter(addr =>
-            addr !== '-' && addr.trim() !== ''
-          );
-          if (validAddresses.length === 0) {
-            errorMessage = 'Please enter at least one GLN address.';
-          }
-        }
-
-        if (!formData.GTINsRequired) {
-          errorMessage = 'Please select whether you require GTINs.';
-        } else if (formData.GTIN8sRequired === 'yes' && !formData.GTIN8) {
-          errorMessage = 'Please enter GTIN8 information.';
-        }
-      } else if (currentStep === 7) {
-        if (!formData.userName) {
-          errorMessage = 'Please enter your full name.';
-        } else if (!formData.uploadedImage) {
-          errorMessage = 'Please upload your signature.';
-        } else if (!formData.agreeTerms) {
-          errorMessage = 'Please agree to the terms and conditions.';
-        }
+      if (validation.errors.length === 1) {
+        errorMessage = validation.errors[0];
+      } else if (validation.errors.length <= 3) {
+        errorMessage = validation.errors.join('\n• ');
+        errorMessage = '• ' + errorMessage;
+      } else {
+        // For more than 3 errors, show first 3 and count
+        const firstThreeErrors = validation.errors.slice(0, 3);
+        errorMessage = '• ' + firstThreeErrors.join('\n• ');
+        errorMessage += `\n• ... and ${validation.errors.length - 3} more error(s)`;
       }
 
       showError(errorMessage);
     }
   };
-
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -558,32 +826,29 @@ const GeneralForm: React.FC = () => {
     }
   };
 
+  // Updated handleSubmit function
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const isValid = validateStep();
+    const validation = validateStep();
 
-    if (!isValid) {
+    if (!validation.isValid) {
       setShowErrors(true);
 
-      let errorMessage = 'Please fill all required fields correctly.';
+      // Create detailed error message for final submission
+      let errorMessage = 'Please fix the following issues:\n\n';
+      validation.errors.forEach((error, index) => {
+        errorMessage += `${index + 1}. ${error}\n`;
+      });
 
-      if (!formData.userName) {
-        errorMessage = 'Please enter your full name.';
-      } else if (!formData.uploadedImage) {
-        errorMessage = 'Please upload your signature.';
-      } else if (!formData.agreeTerms) {
-        errorMessage = 'Please agree to the terms and conditions.';
-      }
-
-      showError(errorMessage);
+      showError(errorMessage.trim());
       return;
     }
 
     setIsSubmitting(true);
 
     // Background submission
-    fetch('https://script.google.com/macros/s/AKfycbzph-lqGAlt_pE2GX0ZknTn7Thvb9qsGU6apz_ZyYTMIZJbFNtBN7PbV_tRDvemOBm8GA/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxRQqVnxFLS8reDK4WJYFlwZB48YA3IogYS4OjSx5AZwqZQeGCCpqLeo05DO9COJLLmfw/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
@@ -597,7 +862,6 @@ const GeneralForm: React.FC = () => {
     setShowErrors(false);
     setIsSubmitting(false);
   };
-
   const renderStepContent = () => {
     switch (currentStep) {
 
@@ -612,7 +876,7 @@ const GeneralForm: React.FC = () => {
                 value={formData.formName}
               />
               <div className="form-group">
-                <label htmlFor="companyName">Company Name</label>
+                <label htmlFor="companyName">Company Name *</label>
                 <input
                   type="text"
                   id="companyName"
@@ -631,7 +895,7 @@ const GeneralForm: React.FC = () => {
 
               </div>
               <div className="form-group">
-                <label htmlFor="streetAddress">Street Address</label>
+                <label htmlFor="streetAddress">Street Address *</label>
                 <input
                   type="text"
                   id="streetAddress"
@@ -642,7 +906,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">City *</label>
                 <input
                   type="text"
                   id="city"
@@ -659,7 +923,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="province">State/Province</label>
+                <label htmlFor="province">State/Province *</label>
                 <select
                   id="province"
                   name="province"
@@ -675,7 +939,7 @@ const GeneralForm: React.FC = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="postCode">Postal Code</label>
+                <label htmlFor="postCode">Postal Code *</label>
                 <input
                   type="text"
                   id="postCode"
@@ -691,7 +955,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="telephone">Telephone (Including City Codes)</label>
+                <label htmlFor="telephone">Telephone (Including City Codes) *</label>
                 <input
                   type="tel"
                   id="telephone"
@@ -710,7 +974,7 @@ const GeneralForm: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="email">Company Email</label>
+                <label htmlFor="email">Company Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -720,12 +984,14 @@ const GeneralForm: React.FC = () => {
                   placeholder="example@company.com"
                   required
                 />
+                <p className='fee-description'>Please provide the official company email address.</p>
+
               </div>
 
               <div className="form-group">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px', margin: '5px 0' }}>
                   <label htmlFor="ntn">
-                    Select whether you&apos;re entering
+                    Select whether you&apos;re entering*
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center' }}>
                     <input
@@ -797,10 +1063,11 @@ const GeneralForm: React.FC = () => {
                     disabled={!format}
                     required
                   />
+                  <p className='fee-description'>  NTN is mandatory; if unavailable, provide CNIC instead.</p>
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="companyRegNo">SECP Company Registration Number</label>
+                <label htmlFor="companyRegNo">SECP Company Registration Number </label>
                 <input
                   type="text"
                   id="companyRegNo"
@@ -810,7 +1077,7 @@ const GeneralForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="noOfEmployees">Number of Employees</label>
+                <label htmlFor="noOfEmployees">Number of Employees *</label>
                 <input
                   type="number"
                   id="noOfEmployees"
@@ -881,6 +1148,7 @@ const GeneralForm: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6">GLN and Billing Information</h2>
             <div className="gln-section">
               <label className="label">Do you require GLN?</label>
+               <p className='fee-description'>You need a Global Location Number to uniquely identify your company, warehouse, store, or any other location in the GS1 system?</p>
               <div className="radio-options">
                 {['yes', 'no'].map((option) => (
                   <label key={option} className="radio-label">
@@ -939,6 +1207,7 @@ const GeneralForm: React.FC = () => {
             <div className="gln-section">
               <div className="form-group">
                 <label>Do you require a separate Billing Address?</label>
+                 <p className='fee-description'>  A billing address is the address where invoices and payment-related documents are sent. If your billing address is different from your business or shipping address, you should select “Yes” and provide the correct billing address details.</p>
                 <div className="radio-options">
                   <label>
                     <input
@@ -1063,12 +1332,24 @@ const GeneralForm: React.FC = () => {
               <div className="form-group">
                 <label htmlFor="ceo-telephone">Mobile or Telephone Number *</label>
                 <input
+
+
                   type="tel"
                   id="ceo-telephone"
-                  value={formData.ceo.telephone}
-                  onChange={(e) => handleContactChange('ceo', 'telephone', e.target.value)}
+                  value={formData.ceo.telephone.startsWith('92') ? formData.ceo.telephone : '92'}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (!value.startsWith('92')) {
+                      value = '92';
+                    }
+                    handleContactChange('ceo', 'telephone', value);
+                  }}
+                  placeholder="923001234567 (minimum 8 digits after 92)"
                   required
                 />
+
+
+
               </div>
             </div>
           </div>
@@ -1135,11 +1416,18 @@ const GeneralForm: React.FC = () => {
               </div>
               <div className="form-group">
                 <label htmlFor="keyContact-telephone">Mobile or Telephone Number *</label>
-                <input
+                 <input
                   type="tel"
                   id="keyContact-telephone"
-                  value={formData.keyContact.telephone}
-                  onChange={(e) => handleContactChange('keyContact', 'telephone', e.target.value)}
+                  value={formData.keyContact.telephone.startsWith('92') ? formData.keyContact.telephone : '92'}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (!value.startsWith('92')) {
+                      value = '92';
+                    }
+                    handleContactChange('keyContact', 'telephone', value);
+                  }}
+                  placeholder="923001234567 (minimum 8 digits after 92)"
                   required
                 />
               </div>
@@ -1208,11 +1496,18 @@ const GeneralForm: React.FC = () => {
               </div>
               <div className="form-group">
                 <label htmlFor="accountsContact-telephone">Mobile or Telephone Number *</label>
-                <input
+                 <input
                   type="tel"
                   id="accountsContact-telephone"
-                  value={formData.accountsContact.telephone}
-                  onChange={(e) => handleContactChange('accountsContact', 'telephone', e.target.value)}
+                  value={formData.accountsContact.telephone.startsWith('92') ? formData.accountsContact.telephone : '92'}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (!value.startsWith('92')) {
+                      value = '92';
+                    }
+                    handleContactChange('accountsContact', 'telephone', value);
+                  }}
+                  placeholder="923001234567 (minimum 8 digits after 92)"
                   required
                 />
               </div>
@@ -1226,13 +1521,29 @@ const GeneralForm: React.FC = () => {
             <h2>Product Information</h2>
 
             {/* Updated Dropdown for Categories */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div className="form-group">
               <label>Product Categories *</label>
               <div className={`dropdown-container ${isOpen ? 'open' : ''}`} ref={dropdownRef}>
                 <div className="dropdown-header" onClick={toggleDropdown}>
                   <span>
-                    {formData.selectedCategories.length > 0
-                      ? `${formData.selectedCategories.length} categories selected`
+                    {formData.selectedCategories.filter(cat => cat !== 'Other').length > 0
+                      ? `${formData.selectedCategories.filter(cat => cat !== 'Other').length} categories selected`
                       : 'Select categories...'
                     }
                   </span>
@@ -1255,15 +1566,50 @@ const GeneralForm: React.FC = () => {
                 )}
               </div>
 
-              {/* Show selected categories */}
-              {formData.selectedCategories.length > 0 && (
+              {/* Custom category input field */}
+              {formData.selectedCategories.includes('Other') && (
+                <div className="form-group" style={{ marginTop: '10px' }}>
+                  <label htmlFor="customCategory">Please specify your category:</label>
+                  <input
+                    type="text"
+                    id="customCategory"
+                    value={customCategory}
+                    onChange={(e) => handleCustomCategoryChange(e.target.value)}
+                    placeholder="Enter your custom category"
+                    className="form-control"
+                    style={{ marginTop: '5px' }}
+                  />
+                </div>
+              )}
+
+              {/* Show selected categories - exclude placeholder */}
+              {formData.selectedCategories.filter(cat => cat !== 'Other').length > 0 && (
                 <div className="selected-categories">
-                  <small>Selected: {formData.selectedCategories.join(', ')}</small>
+                  <small>
+                    Selected: {formData.selectedCategories
+                      .filter(cat => cat !== 'Other')
+                      .join(', ')}
+                  </small>
                 </div>
               )}
             </div>
-            
-           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             <div className="gln-section">
@@ -1326,24 +1672,16 @@ const GeneralForm: React.FC = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>For 10 GTIN-13s </td>
-                      <td>PKR 20,934 </td>
-                      <td>PKR 3,349</td>
-                      <td>PKR 24,284</td>
+                      <td> For GTIN - 14's  </td>
+                      <td>PKR  67,201</td>
+                      <td>PKR 10,752</td>
+                      <td>PKR 77,953</td>
                     </tr>
                     <tr>
-                      <td>Above 10 GTIN-13s
-                        (50% of Normal Entrance Fee)</td>
-                      <td>
-                        PKR 41,870</td>
-                      <td>PKR 6,699</td>
-                      <td>PKR 48,569</td>
-                    </tr>
-                    <tr>
-                      <td>For 1 GTIN-13s / GLN </td>
-                      <td> PKR 20,934</td>
-                      <td> PKR 3,349</td>
-                      <td> PKR 24,284</td>
+                      <td>For GLN - 13's </td>
+                      <td> PKR  33,601</td>
+                      <td> PKR 5,376</td>
+                      <td> PKR 38,977</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1369,31 +1707,17 @@ const GeneralForm: React.FC = () => {
                       <td>
                         <input
                           type="checkbox"
-                          id="annual-1-gln" // match the sanitized ID
+                          id="annual-1-gln"
                           checked={formData.selectedFees.includes('1 GLN')}
                           onChange={() => handleFeeToggle('1 GLN')}
                         />
-
                       </td>
-                      <td>1 GTIN-13 / GLN</td>
-                      <td>PKR 8,723</td>
-                      <td>PKR 1,396</td>
-                      <td>PKR 10,119</td>
+                      <td>1 GLN-13</td>
+                      <td>PKR  12,037</td>
+                      <td>PKR 1,926</td>
+                      <td>PKR 13,049</td>
                     </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="checkbox"
-                          id="annual-10-gtins"
-                          checked={formData.selectedFees.includes('10 GTINs')}
-                          onChange={() => handleFeeToggle('10 GTINs')}
-                        />
-                      </td>
-                      <td>10 GTIN-13s</td>
-                      <td>PKR 8,723</td>
-                      <td>PKR 1,396</td>
-                      <td>PKR 10,119</td>
-                    </tr>
+                  
                     <tr>
                       <td>
                         <input
@@ -1401,12 +1725,13 @@ const GeneralForm: React.FC = () => {
                           id="annual-100-gtins"
                           checked={formData.selectedFees.includes('100 GTINs')}
                           onChange={() => handleFeeToggle('100 GTINs')}
+
                         />
                       </td>
                       <td>100 GTIN-13s</td>
-                      <td>PKR 13,957</td>
-                      <td>PKR 2,233</td>
-                      <td>PKR 16,190</td>
+                      <td>PKR  19,260</td>
+                      <td>PKR 3,082</td>
+                      <td>PKR 22,341</td>
                     </tr>
                     <tr>
                       <td>
@@ -1415,12 +1740,13 @@ const GeneralForm: React.FC = () => {
                           id="annual-300-gtins"
                           checked={formData.selectedFees.includes('300 GTINs')}
                           onChange={() => handleFeeToggle('300 GTINs')}
+
                         />
                       </td>
                       <td>300 GTIN-13s</td>
-                      <td>PKR 17,445</td>
-                      <td>PKR 2,793</td>
-                      <td>PKR 20,238</td>
+                      <td>PKR 24,075</td>
+                      <td>PKR 3,852</td>
+                      <td>PKR 27,927</td>
                     </tr>
                     <tr>
                       <td>
@@ -1432,9 +1758,9 @@ const GeneralForm: React.FC = () => {
                         />
                       </td>
                       <td>500 GTIN-13s</td>
-                      <td>PKR 26,167</td>
-                      <td>PKR 4,188</td>
-                      <td>PKR 30,355</td>
+                      <td>PKR 36,113</td>
+                      <td>PKR 5,778</td>
+                      <td>PKR 41,891</td>
                     </tr>
                     <tr>
                       <td>
@@ -1443,12 +1769,13 @@ const GeneralForm: React.FC = () => {
                           id="annual-1000-gtins"
                           checked={formData.selectedFees.includes('1000 GTINs')}
                           onChange={() => handleFeeToggle('1000 GTINs')}
+
                         />
                       </td>
                       <td>1,000 GTIN-13s</td>
-                      <td>PKR 34,875</td>
-                      <td>PKR 5,599</td>
-                      <td>PKR 40,474</td>
+                      <td>PKR 48,151</td>
+                      <td>PKR 7,704</td>
+                      <td>PKR 55,855</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1456,10 +1783,10 @@ const GeneralForm: React.FC = () => {
               </div>
               <p className='fee-description'>Annual fees are due from one calendar year after the allocation date.</p>
               <p className='fee-description'>Training is mandatory and its cost is included in the amount mentioned above.</p>
-              <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-13s, you will need to pay Rs. 68,807/- (Entrance + Annual Fees) for the first year and Rs. 20,238/- in subsequent years.</p>
+              <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-13s, you will need to pay Rs. 105,879/- (Entrance + Annual Fees) for the first year and Rs. 27,927/- in subsequent years.</p>
               <p className='fee-description'>Note: A late fee charge of 5% will apply to the renewal invoice if payment is made after the due date.</p>
               <p className='fee-description'>If you are a printer submitting products on behalf of a brand owner or manufacturer, the submission must be accompanied by a letter from that GS1 member accepting the charges.</p>
-              <p className='fee-description'>Delivery of barcode test reports: Expected delivery time is 3–4 working days. The invoice will be issued to the company and the nominated contact person.</p>
+              <p className='fee-description'>Barcode test reports will be provided within 3–4 working days. The invoice will be issued to the company and the designated contact person.</p>
             </div>
           </div>
         );
@@ -1547,7 +1874,7 @@ const GeneralForm: React.FC = () => {
                 <label htmlFor="agreeTerms">I agree to all terms and conditions</label>
 
                 {showErrors && !formData.agreeTerms && (
-                  <p className="error-message">⯇ Please agree to the terms and conditions.</p>
+                  <p className="error-message-term-condition">⯇ Please agree to the terms and conditions.</p>
                 )}
               </div>
             </div>
@@ -1576,6 +1903,17 @@ const GeneralForm: React.FC = () => {
 
             <div className="form-group">
               <label htmlFor="uploadedImage">Upload the signature of the authorized person.</label>
+              <p className='fee-description'>
+  Please upload the scanned image or digital copy of the authorized person’s signature. 
+  The authorized person is someone who has the legal right to sign documents and make decisions 
+  on behalf of the company.
+  <br /><br />
+  <strong>Guidelines for uploading:</strong>
+  <br />✅ The file should be clear and readable.
+  <br />✅ Acceptable formats: JPG, PNG.
+  <br />✅ Maximum file size: (specify if you have a limit).
+  <br />✅ Make sure the signature is of the authorized company representative only.
+</p>
               <input
                 type="file"
                 id="uploadedImage"
@@ -1583,6 +1921,7 @@ const GeneralForm: React.FC = () => {
                 onChange={handleImageUpload}
                 required
               />
+
               {formData.uploadedImage && (
                 <div className="image-preview">
                   <Image
@@ -1641,7 +1980,7 @@ const GeneralForm: React.FC = () => {
             </button>
           )}
           {currentStep < 7 ? (
-            <button type="button" onClick={nextStep} className="btn-primary">
+            <button type="button" onClick={nextStep} className="btn-next">
               Next
             </button>
           ) : (

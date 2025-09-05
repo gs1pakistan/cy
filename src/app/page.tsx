@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import './home.css';
+import { Copy, Check } from 'lucide-react';
 
 interface Category {
   name: string;
@@ -32,21 +33,43 @@ interface VerificationFeeRow {
 
 export default function HomePage() {
   const [visibleCategory, setVisibleCategory] = useState<string | null>(null);
-
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+  
   // Separated paths object
   const categoryPaths = {
     general: '/general',
     healthcare: '/healthcare',
     udi: '/udi',
-    textile: '/textile'
+    textile: '/textile',
+    update: '/update'
   };
 
   // Separated descriptions object
   const categoryDescriptions = {
-    general: 'For general products and services registration',
-    healthcare: 'For healthcare-related products and medical devices',
-    udi: 'For Unique Device Identification products',
-    textile: 'For textile products and garment industry'
+    general: 'The General category covers various products like packaged food, agricultural items, and industrial goods. Assigning GTINs ensures accurate identification and traceability.',
+    healthcare: 'The Healthcare category covers medical products and pharmaceuticals. GS1 standards ensure accurate identification, traceability, patient safety, and regulatory compliance.',
+    udi: 'The UDI category focuses on uniquely identifying medical devices. Assigning UDIs ensures better monitoring, traceability, recalls, and improved patient safety.',
+    textile: 'The Textile category covers fabrics, garments, home textiles, and ready-made garments. Assigning GTINs ensures accurate identification, efficient tracking, and better inventory management.',
+    update: 'Use the Update Form to modify product details, attributes, or other information. Keeping data updated ensures accuracy, consistency, and better supply chain management.'
+  };
+
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(label);
+      setTimeout(() => setCopiedText(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedText(label);
+      setTimeout(() => setCopiedText(null), 2000);
+    }
   };
 
   const categories: Category[] = [
@@ -74,43 +97,12 @@ export default function HomePage() {
         { label: 'Healthcare for GLN 13s', fee: 33601, pra: 10752, total: 77953 },
         { label: 'Healthcare for GTINs 14s ', fee: 67201, pra: 5376, total: 38977 },
       ],
-      annualFees:[
-  { label: '1 GLN-13s', fee: 12037, pra: 1926, total: 13049 },
+      annualFees: [
+        { label: '1 GLN-13s', fee: 12037, pra: 1926, total: 13049 },
         { label: '100 GTIN-14s', fee: 19260, pra: 3082, total: 22341 },
         { label: '300 GTIN-14s', fee: 24075, pra: 3852, total: 27927 },
         { label: '500 GTIN-14s', fee: 36113, pra: 5778, total: 41891 },
         { label: '1,000 GTIN-14s', fee: 48151, pra: 7704, total: 55855 },
-      ],
-      verificationFees: [
-        {
-          title: 'Barcode Verification Fees: (1D)',
-          fees: [
-            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 907 },
-            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 652, pra: 104, total: 756 },
-          ]
-        },
-        {
-          title: 'Barcode Verification Fees: (2D) Data Matrix',
-          fees: [
-            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1435, pra: 230, total: 1665 },
-            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1304, pra: 209, total: 1513 },
-          ]
-        }
-      ]
-    },
-    {
-      name: 'UDI',
-      key: 'udi',
-      entranceFees: [
- { label: 'UDI for GLN ', fee: 33601, pra: 10752, total: 77953 },
-        { label: 'UDI for GTINs 14s ', fee: 67201, pra: 5376, total: 38977 },
-      ],
-      annualFees: [
-               { label: '1 GLN-13s', fee: 36111, pra: 5778, total: 41889 },
-        { label: '100 GTIN-14s', fee: 57778, pra: 9245, total: 67023 },
-        { label: '300 GTIN-14s', fee: 72223, pra: 11556, total: 83779 },
-        { label: '500 GTIN-14s', fee: 108339, pra: 17334, total: 125674 },
-        { label: '1,000 GTIN-14s', fee: 144451, pra: 23112, total: 167563 },
       ],
       verificationFees: [
         {
@@ -130,6 +122,37 @@ export default function HomePage() {
       ]
     },
     {
+      name: 'UDI',
+      key: 'udi',
+      entranceFees: [
+        { label: 'UDI for GLN ', fee: 33601, pra: 10752, total: 77953 },
+        { label: 'UDI for GTINs 14s ', fee: 67201, pra: 5376, total: 38977 },
+      ],
+      annualFees: [
+        { label: '1 GLN-13s', fee: 36111, pra: 5778, total: 41889 },
+        { label: '100 GTIN-14s', fee: 57778, pra: 9245, total: 67023 },
+        { label: '300 GTIN-14s', fee: 72223, pra: 11556, total: 83779 },
+        { label: '500 GTIN-14s', fee: 108339, pra: 17334, total: 125674 },
+        { label: '1,000 GTIN-14s', fee: 144451, pra: 23112, total: 167563 },
+      ],
+      verificationFees: [
+        {
+          title: 'Barcode Verification Fees: (1D)',
+          fees: [
+            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 907 },
+            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+          ]
+        },
+        {
+          title: 'Barcode Verification Fees: (2D) Data Matrix',
+          fees: [
+            { description: '2D Data Matrix - 14\'s (1-10 Per GTINs)', perUnit: 1196, pra: 191, total: 1387 },
+            { description: '2D Data Matrix - 14\'s (Above 10 Per GTINs)', perUnit: 1087, pra: 174, total: 1261 },
+          ]
+        }
+      ]
+    },
+    {
       name: 'Textile',
       key: 'textile',
       entranceFees: [
@@ -137,11 +160,35 @@ export default function HomePage() {
         { label: 'Textile  GLNs -13s', fee: 32600, pra: 5216, total: 37816 },
       ],
       annualFees: [
-               { label: '1 GLN-13s', fee: 8723, pra: 1396, total: 10119 },
+        { label: '1 GLN-13s', fee: 8723, pra: 1396, total: 10119 },
         { label: '100 GTIN-13s', fee: 13957, pra: 2233, total: 16190 },
-        { label: '1,000 GTIN-13s', fee: 34891, pra: 5583, total: 181321 },        
+        { label: '1,000 GTIN-13s', fee: 34891, pra: 5583, total: 40474 },
         { label: '10,000 GTIN-13s', fee: 156311, pra: 25010, total: 181321 },
-        { label: '100,000 GTIN-13s', fee: 358691, pra: 57391, total: 416763 },
+        { label: '100,000 GTIN-13s', fee: 358691, pra: 57391, total: 416082 },
+      ],
+      verificationFees: [
+        {
+          title: 'Barcode Verification Fees: (1D)',
+          fees: [
+            { description: 'GTIN - 13\'s (1-10 Per GTINs)', perUnit: 750, pra: 120, total: 870 },
+            { description: 'GTIN - 13\'s (Above 10 Per GTINs)', perUnit: 700, pra: 112, total: 812 },
+          ]
+        },
+      ]
+    },
+    {
+      name: 'Update',
+      key: 'update',
+      entranceFees: [
+        { label: 'update GTINs-13s', fee: 41870, pra: 6699, total: 48569 },
+        { label: 'update  GLNs -13s', fee: 32600, pra: 5216, total: 37816 },
+      ],
+      annualFees: [
+        { label: '1 GLN-13s', fee: 8723, pra: 1396, total: 10119 },
+        { label: '100 GTIN-13s', fee: 13957, pra: 2233, total: 16190 },
+        { label: '1,000 GTIN-13s', fee: 34891, pra: 5583, total: 40474 },
+        { label: '10,000 GTIN-13s', fee: 156311, pra: 25010, total: 181321 },
+        { label: '100,000 GTIN-13s', fee: 358691, pra: 57391, total: 416082 },
       ],
       verificationFees: [
         {
@@ -154,6 +201,9 @@ export default function HomePage() {
       ]
     }
   ];
+
+  // Filter categories for pricing section - exclude 'update'
+  const pricingCategories = categories.filter(category => category.key !== 'update');
 
   const toggleCategory = (key: string) => {
     setVisibleCategory(prev => (prev === key ? null : key));
@@ -226,11 +276,11 @@ export default function HomePage() {
           {categories.map((category) => (
             <div key={category.key} className="registration-card">
               <div className="card-header">
-                <h3>{category.name} Registration</h3>
+                <h3>{category.name} Application</h3>
                 <p>{categoryDescriptions[category.key as keyof typeof categoryDescriptions]}</p>
               </div>
               <Link href={categoryPaths[category.key as keyof typeof categoryPaths]} className="card-link">
-                <button className="primary-button">Start Registration</button>
+                <button className="primary-button">Apply Now</button>
               </Link>
             </div>
           ))}
@@ -256,11 +306,43 @@ export default function HomePage() {
             </div>
             <div className="info-row">
               <span className="info-label">Account No:</span>
-              <span className="info-value">6-01-13-20311-714-182748</span>
+              <div className="info-value-with-copy">
+                <span className="info-value">6-01-13-20311-714-182748</span>
+                <button 
+                  className={`copy-button ${copiedText === 'account' ? 'copied' : ''}`}
+                  onClick={() => copyToClipboard('6-01-13-20311-714-182748', 'account')}
+                  title={copiedText === 'account' ? 'Copied!' : 'Copy Account Number'}
+                >
+                  {copiedText === 'account' ? (
+                    <Check size={16} />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                  <span className="copy-text">
+                    {copiedText === 'account' ? 'Copied!' : 'Copy'}
+                  </span>
+                </button>
+              </div>
             </div>
             <div className="info-row">
               <span className="info-label">IBAN:</span>
-              <span className="info-value">PK68 MPBL 0113 0271 4018 2748</span>
+              <div className="info-value-with-copy">
+                <span className="info-value">PK68 MPBL 0113 0271 4018 2748</span>
+                <button 
+                  className={`copy-button ${copiedText === 'iban' ? 'copied' : ''}`}
+                  onClick={() => copyToClipboard('PK68 MPBL 0113 0271 4018 2748', 'iban')}
+                  title={copiedText === 'iban' ? 'Copied!' : 'Copy IBAN'}
+                >
+                  {copiedText === 'iban' ? (
+                    <Check size={16} />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                  <span className="copy-text">
+                    {copiedText === 'iban' ? 'Copied!' : 'Copy'}
+                  </span>
+                </button>
+              </div>
             </div>
             <div className="banking-note">
               <strong>Important:</strong> If you pay by bank transfer, please transfer the required amount <em>exclusive of local bank charges</em>.
@@ -269,11 +351,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Fee Structure */}
+      {/* Fee Structure - Using filtered categories */}
       <section className="fees-section">
         <h2 className="section-title">Detailed Pricing of all Categories</h2>
         <div className="fee-categories">
-          {categories.map((category) => (
+          {pricingCategories.map((category) => (
             <div key={category.key} className="fee-category-card">
               <div className="category-header">
                 <div className="category-info">
@@ -292,7 +374,12 @@ export default function HomePage() {
               {visibleCategory === category.key && (
                 <div className="fee-details">
                   {renderFeeTable('Entrance Fees', category.entranceFees, true)}
-                  {renderFeeTable('Annual Fees', category.annualFees)}
+                  {renderFeeTable(
+                    category.key === 'udi' 
+                      ? 'Consolidated Fee Schedule for GTIN-14\'s renewable every three years (Inclusive of Govt. Taxes)' 
+                      : 'Annual Fees', 
+                    category.annualFees
+                  )}
                   
                   {/* Render Verification Fees if they exist */}
                   {category.verificationFees && category.verificationFees.map((verificationSection) => 
@@ -302,6 +389,11 @@ export default function HomePage() {
                   {category.key === 'general' && (
                     <p className="fee-note">
                       * (Annual Fee Are Due from One Calendar Year of the Allocation Date)
+                    </p>
+                  )}
+                  {category.key === 'udi' && (
+                    <p className="fee-note">
+                      * (Consolidated Fee Schedule for GTIN-14's renewable every three years (Inclusive of Govt. Taxes))
                     </p>
                   )}
                 </div>
@@ -320,8 +412,8 @@ export default function HomePage() {
           </div>
           <div className="footer-contact">
             <p>Email: <a href="mailto:info@gs1pk.org">info@gs1pk.org</a></p>
-            <p>Phone: <a href="tel:+924211111475">+92-42-111-111-475</a></p>
-            <p>Address: GS1 Pakistan, Lahore Chamber of Commerce & Industry Building, Lahore, Pakistan</p>
+            <p>Phone: <a href="tel:+924211111475">021 32215844</a></p>
+            <p>Address: 2nd Floor, Azzainab Court, Campbell Street 74200 Karachi Pakistan</p>
           </div>
         </div>
       </footer>

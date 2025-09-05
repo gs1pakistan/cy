@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import './general.css';
+import './update.css';
 
 interface ContactInfo {
   designation: string;
@@ -551,7 +551,7 @@ const GeneralForm: React.FC = () => {
           if (!formData.telephone.startsWith('92')) {
             errors.push("Telephone number must start with country code '92'");
           } else if (formData.telephone.length < 12) {
-            errors.push("please complete the Mobile or Telephone Number after country code '92'");
+            errors.push("Telephone number must have at least 08 digits after country code '92'");
           } else {
             errors.push("Invalid telephone number format (e.g., 923001234567)");
           }
@@ -657,7 +657,7 @@ const GeneralForm: React.FC = () => {
             if (!value.startsWith('92')) {
               errors.push(`${label} must start with country code '92'`);
             } else if (value.length < 10) {
-              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+              errors.push(`${label} must have at least 08 digits after country code '92'`);
             } else {
               errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
             }
@@ -689,7 +689,7 @@ const GeneralForm: React.FC = () => {
             if (!value.startsWith('92')) {
               errors.push(`${label} must start with country code '92'`);
             } else if (value.length < 10) {
-              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+              errors.push(`${label} must have at least 08 digits after country code '92'`);
             } else {
               errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
             }
@@ -721,7 +721,7 @@ const GeneralForm: React.FC = () => {
             if (!value.startsWith('92')) {
               errors.push(`${label} must start with country code '92'`);
             } else if (value.length < 10) {
-              errors.push(`${label} please complete the Mobile or Telephone Number after country code '92'`);
+              errors.push(`${label} must have at least 08 digits after country code '92'`);
             } else {
               errors.push(`Invalid ${label.toLowerCase()} format (e.g., 923001234567)`);
             }
@@ -1972,7 +1972,7 @@ const GeneralForm: React.FC = () => {
         <div className="form-header-title">
           <h1 className="form-header">
             <span className="title-main">GS1 Pakistan </span>
-            <span className="title-sub">  General Application Form</span>
+            <span className="title-sub">  UDI Application Form</span>
           </h1>
         </div>
         <div className="progress-bar">

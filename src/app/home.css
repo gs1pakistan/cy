@@ -456,29 +456,88 @@
 }
 
 @media (max-width: 480px) {
+  .fee-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 0.5rem 2rem;
+  font-size: 0.6rem;
+  border-bottom: 1px solid #f7fafc;
+  align-items: center;
+}
   .hero-section {
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
   }
-  
+  .hero-subtitle {
+    font-size: 0.6rem;
+  } 
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.1rem;
   }
   
   .section-title {
-    font-size: 1.5rem;
+    
+    font-size: 1rem;
   }
-  
-  .registration-section,
-  .fees-section {
-    padding: 2.5rem 1rem;
+  .primary-button {
+  padding: 0.2rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  letter-spacing: 0.025em;
+}
+  .registration-section{
+    padding: 0.1rem 1rem;
+    margin-top: -3rem;
   }
-  
+    .fees-section {
+    padding: 0.1rem 1rem;
+    margin-top: 1rem;
+  }
+.info-row {
+  padding: 0.5rem 0;
+}
+
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-dark);
+  min-width: 130px;
+  font-size: 0.7rem;
+}
+
+.info-value {
+  font-weight: 700;
+  flex: 1;
+  font-size: 0.7rem;
+}
+  .registration-card {
+  padding: 1rem;
+}
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.card-header p {
+  color: var(--text-medium);
+  font-size: 0.7rem;
+}
+
   .banking-section {
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
   }
   
   .banking-card {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .category-header {
@@ -488,12 +547,72 @@
   .fee-details {
     padding: 1.5rem;
   }
-  
+  .banking-note {
+  margin-top: 0.1rem;
+  padding: 1rem;
+  background: #fef5e7;
+  border: 1px solid #f6ad55;
+  border-radius: 8px;
+  font-size: 0.6rem;
+}
   .card-grid {
     grid-template-columns: 1fr;
   }
+.toggle-button {
+  padding: 0.7rem 3rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
+.category-info h3 {
+  color: var(--primary-blue);
+  font-size: 1rem;
+  font-weight: 600;
+
+}
+
+.category-desc {
+  color: var(--text-medium);
+  font-size: 0.8rem;
+}
+
+.footer {
+  padding: 2rem 1rem 1rem;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.footer-main h4 {
+  color: var(--primary-orange);
+  font-size: 1.2rem;
+  margin-bottom: 0.1rem;
+}
+
+.footer-main p {
+  opacity: 0.8;
+  font-size: 0.8rem;
+}
+
+.footer-contact {
+
+  gap: 0.1rem;
+}
+
+.footer-contact p {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+
+}
 
 .verification-section {
   margin: 0.1rem auto;
@@ -516,3 +635,253 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     .banking-section {
+          padding: 4rem 2rem;
+          background: #f0f4ff;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .section-title {
+          font-size: 2rem;
+          color: #002C6C;
+          text-align: center;
+          margin-bottom: 2rem;
+          font-weight: 600;
+          position: relative;
+        }
+
+        .section-title::after {
+          content: '';
+          position: absolute;
+          bottom: -0.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 3px;
+          background: #F26334;
+          border-radius: 2px;
+        }
+
+        .banking-card {
+          max-width: 800px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 12px;
+          padding: 2.5rem;
+          box-shadow: 0 4px 16px rgba(0, 44, 108, 0.1);
+        }
+
+        .banking-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 0;
+          border-bottom: 1px solid #f7fafc;
+        }
+
+        .info-row:last-of-type {
+          border-bottom: none;
+        }
+
+        .info-label {
+          font-weight: 600;
+          color: #1a202c;
+          min-width: 130px;
+          font-size: 1rem;
+        }
+
+        .info-value {
+          font-weight: 700;
+          flex: 1;
+          font-size: 1rem;
+          color: #2d3748;
+        }
+
+        .info-value-with-copy {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex: 1;
+        }
+
+        .copy-button {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #002C6C;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          min-width: 80px;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .copy-button:hover {
+          background: #001a4d;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 44, 108, 0.3);
+        }
+
+        .copy-button:active {
+          transform: translateY(0);
+        }
+
+        .copy-button.copied {
+          background: #10b981;
+          color: white;
+        }
+
+        .copy-button.copied:hover {
+          background: #059669;
+        }
+
+        .copy-text {
+          font-weight: 600;
+          letter-spacing: 0.025em;
+        }
+
+        .banking-note {
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #fef5e7;
+          border: 1px solid #f6ad55;
+          border-radius: 8px;
+          color: #744210;
+          font-size: 0.9rem;
+          line-height: 1.6;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .banking-section {
+            padding: 3rem 1.5rem;
+          }
+          
+          .banking-card {
+            padding: 2rem;
+          }
+          
+          .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+          }
+          
+          .info-value-with-copy {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+          }
+          
+          .copy-button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .banking-section {
+            padding: 1rem 1rem;
+          }
+          
+          .banking-card {
+            padding: 1rem;
+          }
+          
+          .info-label {
+            font-size: 0.875rem;
+          }
+          
+          .info-value {
+            font-size: 0.875rem;
+            word-break: break-all;
+          }
+          
+          .copy-button {
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+          }
+          
+          .banking-note {
+            font-size: 0.8rem;
+            padding: 0.875rem;
+          }
+        }
+
+        /* Animation for copy success */
+        @keyframes copySuccess {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        .copy-button.copied {
+          animation: copySuccess 0.3s ease-in-out;
+        }
+
+        /* Focus styles for accessibility */
+        .copy-button:focus {
+          outline: 2px solid #F26334;
+          outline-offset: 2px;
+        }
+
+        .copy-button:focus:not(:focus-visible) {
+          outline: none;
+        }

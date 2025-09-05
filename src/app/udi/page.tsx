@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import './general.css';
+import './udi.css';
 
 interface ContactInfo {
   designation: string;
@@ -1672,24 +1672,16 @@ const GeneralForm: React.FC = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>For 10 GTIN-13s </td>
-                      <td>PKR 20,934 </td>
-                      <td>PKR 3,349</td>
-                      <td>PKR 24,284</td>
+                      <td>For GTIN-14s </td>
+                      <td>PKR 67,201 </td>
+                      <td>PKR 10,752</td>
+                      <td>PKR 77,953</td>
                     </tr>
                     <tr>
-                      <td>Above 10 GTIN-13s
-                        (50% of Normal Entrance Fee)</td>
-                      <td>
-                        PKR 41,870</td>
-                      <td>PKR 6,699</td>
-                      <td>PKR 48,569</td>
-                    </tr>
-                    <tr>
-                      <td>For 1 GTIN-13s / GLN </td>
-                      <td> PKR 20,934</td>
-                      <td> PKR 3,349</td>
-                      <td> PKR 24,284</td>
+                      <td>For GLN (50% of Normal Entrance Fee)</td>
+                      <td> PKR 33,601</td>
+                      <td>PKR 5,376</td>
+                      <td>PKR 38,977</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1704,7 +1696,7 @@ const GeneralForm: React.FC = () => {
                   <thead>
                     <tr>
                       <th>Select</th>
-                      <th>Annual Fee (Incl. Govt. Taxes)</th>
+                      <th>Three Year Fee (Incl. Govt. Taxes)</th>
                       <th>Base Fee</th>
                       <th>Tax (16%)</th>
                       <th>Total</th>
@@ -1718,29 +1710,12 @@ const GeneralForm: React.FC = () => {
                           id="annual-1-gln"
                           checked={formData.selectedFees.includes('1 GLN')}
                           onChange={() => handleFeeToggle('1 GLN')}
-
-                        />
-
-                      </td>
-                      <td>1 GTIN-13 / GLN</td>
-                      <td>PKR 8,723</td>
-                      <td>PKR 1,396</td>
-                      <td>PKR 10,119</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="checkbox"
-                          id="annual-10-gtins"
-                          checked={formData.selectedFees.includes('10 GTINs')}
-                          onChange={() => handleFeeToggle('10 GTINs')}
-
                         />
                       </td>
-                      <td>10 GTIN-13s</td>
-                      <td>PKR 8,723</td>
-                      <td>PKR 1,396</td>
-                      <td>PKR 10,119</td>
+                      <td>1 GLN-13s</td>
+                      <td>PKR 36,111</td>
+                      <td>PKR 5,778 </td>
+                      <td>PKR 41,889</td>
                     </tr>
                     <tr>
                       <td>
@@ -1749,13 +1724,12 @@ const GeneralForm: React.FC = () => {
                           id="annual-100-gtins"
                           checked={formData.selectedFees.includes('100 GTINs')}
                           onChange={() => handleFeeToggle('100 GTINs')}
-
                         />
                       </td>
-                      <td>100 GTIN-13s</td>
-                      <td>PKR 13,957</td>
-                      <td>PKR 2,233</td>
-                      <td>PKR 16,190</td>
+                      <td>100 GTIN-14s</td>
+                      <td>PKR 57,778</td>
+                      <td>PKR 9,245</td>
+                      <td>PKR 67,023</td>
                     </tr>
                     <tr>
                       <td>
@@ -1764,13 +1738,12 @@ const GeneralForm: React.FC = () => {
                           id="annual-300-gtins"
                           checked={formData.selectedFees.includes('300 GTINs')}
                           onChange={() => handleFeeToggle('300 GTINs')}
-
                         />
                       </td>
-                      <td>300 GTIN-13s</td>
-                      <td>PKR 17,445</td>
-                      <td>PKR 2,793</td>
-                      <td>PKR 20,238</td>
+                      <td>300 GTIN-14s</td>
+                      <td>PKR 72,223</td>
+                      <td>PKR 11,556</td>
+                      <td>PKR 83,779</td>
                     </tr>
                     <tr>
                       <td>
@@ -1781,10 +1754,10 @@ const GeneralForm: React.FC = () => {
                           onChange={() => handleFeeToggle('500 GTINs')}
                         />
                       </td>
-                      <td>500 GTIN-13s</td>
-                      <td>PKR 26,167</td>
-                      <td>PKR 4,188</td>
-                      <td>PKR 30,355</td>
+                      <td>500 GTIN-14s</td>
+                      <td>PKR 108,339</td>
+                      <td>PKR 17,334</td>
+                      <td>PKR 125,674</td>
                     </tr>
                     <tr>
                       <td>
@@ -1793,13 +1766,12 @@ const GeneralForm: React.FC = () => {
                           id="annual-1000-gtins"
                           checked={formData.selectedFees.includes('1000 GTINs')}
                           onChange={() => handleFeeToggle('1000 GTINs')}
-
                         />
                       </td>
-                      <td>1,000 GTIN-13s</td>
-                      <td>PKR 34,875</td>
-                      <td>PKR 5,599</td>
-                      <td>PKR 40,474</td>
+                      <td>1,000 GTIN-14s</td>
+                      <td>PKR 144,451</td>
+                      <td>PKR 23,112</td>
+                      <td>PKR 167,563</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1807,7 +1779,7 @@ const GeneralForm: React.FC = () => {
               </div>
               <p className='fee-description'>Annual fees are due from one calendar year after the allocation date.</p>
               <p className='fee-description'>Training is mandatory and its cost is included in the amount mentioned above.</p>
-              <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-13s, you will need to pay Rs. 68,807/- (Entrance + Annual Fees) for the first year and Rs. 20,238/- in subsequent years.</p>
+              <p className='fee-description'>From the second year onward, companies are required to pay the annual renewal fee. For example, if you request 300 GTIN-14s, you will need to pay Rs. 161,731/- (covering three years license fee). for the first year and Rs. 20,238/- in subsequent years.</p>
               <p className='fee-description'>Note: A late fee charge of 5% will apply to the renewal invoice if payment is made after the due date.</p>
               <p className='fee-description'>If you are a printer submitting products on behalf of a brand owner or manufacturer, the submission must be accompanied by a letter from that GS1 member accepting the charges.</p>
               <p className='fee-description'>Barcode test reports will be provided within 3–4 working days. The invoice will be issued to the company and the designated contact person.</p>
@@ -1972,7 +1944,7 @@ const GeneralForm: React.FC = () => {
         <div className="form-header-title">
           <h1 className="form-header">
             <span className="title-main">GS1 Pakistan </span>
-            <span className="title-sub">  General Application Form</span>
+            <span className="title-sub">  UDI Application Form</span>
           </h1>
         </div>
         <div className="progress-bar">
