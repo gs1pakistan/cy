@@ -185,7 +185,7 @@ const GeneralForm: React.FC = () => {
   const [customCategory, setCustomCategory] = useState('');
 
   const initialFormState: FormData = {
-    formName: 'Healthcare Form',
+    formName: 'UDI Form',
     companyName: '',
     streetAddress: '',
     city: '',
